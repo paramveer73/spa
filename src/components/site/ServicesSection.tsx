@@ -12,6 +12,27 @@ import { scrollToBooking } from "@/lib/scroll";
 const CARD_COUNT = 4;
 const FOCAL = { mobile: 0.65, desktop: 0.8 };
 
+const CTA_LABEL = "Book now";
+const BADGE_SIZE = { xs: 30, md: 44 };
+/** Wide enough for CTA_LABEL plus the arrow without the text wrapping. */
+const BADGE_OPEN_WIDTH = { xs: 96, md: 132 };
+const EASE_OUT = "cubic-bezier(0.16,1,0.3,1)";
+
+/** Hand-rolled so it inherits currentColor and pulls in no icon package. */
+function BookArrow() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+      <path
+        d="M1 7h11m0 0L8 3m4 4-4 4"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export default function ServicesSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const cardsRef = useRef<(HTMLElement | null)[]>([]);
@@ -209,6 +230,10 @@ export default function ServicesSection() {
               return (
                 <Box
                   key={svc.id}
+                  component="button"
+                  type="button"
+                  onClick={scrollToBooking}
+                  aria-label={`${CTA_LABEL} — ${svc.name}`}
                   sx={{
                     flex: 1,
                     minWidth: { xs: "calc(50% - 4px)", md: 0 },
@@ -217,6 +242,14 @@ export default function ServicesSection() {
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "space-between",
+                    // A real <button>: the whole card is the booking target, so
+                    // it needs keyboard focus and Enter/Space for free rather
+                    // than a div with a click handler bolted on.
+                    border: 0,
+                    font: "inherit",
+                    textAlign: "left",
+                    cursor: "pointer",
+                    appearance: "none",
                     // All four cards are the same palette surface — the active
                     // one is simply opaque while the rest are a veil over the
                     // photograph. Keeping them one material is what lets every
@@ -232,7 +265,27 @@ export default function ServicesSection() {
                         : alpha(theme.palette.background.paper, 0.62),
                     backdropFilter: active ? "blur(12px)" : "blur(20px)",
                     transition: "background-color .3s ease, transform .3s ease",
-                    "&:hover": { transform: "translateY(-4px)" },
+                    // The badge is driven from the card rather than from its own
+                    // :hover — the invitation should fire anywhere on the card,
+                    // not only when the pointer happens to land on the circle.
+                    // Focus-visible mirrors it so keyboard users get the same cue.
+                    "&:hover, &:focus-visible": { transform: "translateY(-4px)" },
+                    // width reads a custom property rather than a breakpoint
+                    // object: MUI resolves responsive objects against the theme
+                    // only for top-level sx keys, and silently drops them inside
+                    // a nested descendant selector like this one. The variable is
+                    // declared on the badge itself, where breakpoints do work.
+                    "&:hover .service-badge, &:focus-visible .service-badge": {
+                      width: "var(--badge-open-width)",
+                      bgcolor: "text.primary",
+                      color: "background.paper",
+                    },
+                    "&:hover .service-badge__num, &:focus-visible .service-badge__num": {
+                      opacity: 0,
+                    },
+                    "&:hover .service-badge__cta, &:focus-visible .service-badge__cta": {
+                      opacity: 1,
+                    },
                   }}
                 >
                   <Typography
@@ -267,23 +320,70 @@ export default function ServicesSection() {
                     >
                       {svc.price.display ? `${svc.price.qualifier ?? "From"} ${svc.price.display}` : "Enquire"}
                     </Typography>
+                    {/* Index badge that opens into the booking invitation on
+                        hover. Both states are absolutely positioned so the pill
+                        can animate its width without the label reflowing — a
+                        flex swap would jitter as the text re-centres each frame.
+                        borderRadius stays 999 rather than 50% so the circle and
+                        the pill are the same shape at every width. */}
                     <Box
+                      className="service-badge"
                       sx={{
-                        width: { xs: 30, md: 44 },
-                        height: { xs: 30, md: 44 },
-                        borderRadius: "50%",
+                        position: "relative",
+                        "--badge-open-width": {
+                          xs: `${BADGE_OPEN_WIDTH.xs}px`,
+                          md: `${BADGE_OPEN_WIDTH.md}px`,
+                        },
+                        width: BADGE_SIZE,
+                        height: BADGE_SIZE,
+                        borderRadius: 999,
                         border: 1,
                         borderColor: "text.primary",
                         color: "text.primary",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontSize: { xs: 10, md: 13 },
-                        fontWeight: 700,
                         flexShrink: 0,
+                        overflow: "hidden",
+                        transition: `width .42s ${EASE_OUT}, background-color .3s ease, color .3s ease`,
                       }}
                     >
-                      {String(i + 1).padStart(2, "0")}
+                      <Box
+                        className="service-badge__num"
+                        sx={{
+                          position: "absolute",
+                          inset: 0,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: { xs: 10, md: 13 },
+                          fontWeight: 700,
+                          transition: "opacity .18s ease",
+                        }}
+                      >
+                        {String(i + 1).padStart(2, "0")}
+                      </Box>
+
+                      <Box
+                        className="service-badge__cta"
+                        sx={{
+                          position: "absolute",
+                          inset: 0,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          gap: 0.75,
+                          whiteSpace: "nowrap",
+                          fontSize: { xs: 9, md: 11 },
+                          fontWeight: 800,
+                          letterSpacing: "0.08em",
+                          textTransform: "uppercase",
+                          opacity: 0,
+                          // Delayed so the pill has started widening before the
+                          // label appears, instead of the text popping in first.
+                          transition: "opacity .22s ease .1s",
+                        }}
+                      >
+                        {CTA_LABEL}
+                        <BookArrow />
+                      </Box>
                     </Box>
                   </Box>
                 </Box>
