@@ -256,14 +256,16 @@ export default function ServicesSection() {
                     // card use text.primary and still stay legible: the text
                     // contrasts against the veil, never against the photo.
                     //
-                    // 0.62 is the floor that holds up over the lightest part of
-                    // the current backdrop; much thinner and the image starts
-                    // bleeding through into the type.
+                    // Both veils are deliberately thin so the shared photograph
+                    // still reads through the row. What keeps the type legible
+                    // at these alphas is the backdrop blur, not the fill — the
+                    // blur flattens the image's local contrast, so the text has
+                    // an even field behind it rather than competing with edges.
                     bgcolor: (theme) =>
                       active
-                        ? theme.palette.background.paper
-                        : alpha(theme.palette.background.paper, 0.62),
-                    backdropFilter: active ? "blur(12px)" : "blur(20px)",
+                        ? alpha(theme.palette.background.paper, 0.86)
+                        : alpha(theme.palette.background.paper, 0.42),
+                    backdropFilter: active ? "blur(16px)" : "blur(28px)",
                     transition: "background-color .3s ease, transform .3s ease",
                     // The badge is driven from the card rather than from its own
                     // :hover — the invitation should fire anywhere on the card,

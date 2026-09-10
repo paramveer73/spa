@@ -30,20 +30,34 @@ export interface MaskPosition {
  * moment the stack moved. offsetLeft/offsetTop report untransformed layout
  * position, so the mosaic stays locked together however the stage is rotated.
  */
-function offsetWithin(node: HTMLElement, ancestor: HTMLElement) {
+function documentOffset(node: HTMLElement) {
   let x = 0;
   let y = 0;
   let current: HTMLElement | null = node;
 
-  while (current && current !== ancestor) {
+  while (current) {
     x += current.offsetLeft;
     y += current.offsetTop;
-    const parent = current.offsetParent as HTMLElement | null;
-    // offsetParent skips static ancestors; stop if it jumps past our section.
-    if (!parent || !ancestor.contains(parent)) break;
-    current = parent;
+    current = current.offsetParent as HTMLElement | null;
   }
   return { x, y };
+}
+
+function offsetWithin(node: HTMLElement, ancestor: HTMLElement) {
+  // Both offsets are resolved all the way to the document and then
+  // subtracted, rather than walking up from the card until the section is
+  // reached.
+  //
+  // offsetParent only stops at *positioned* elements, so a section left at
+  // `position: static` is skipped entirely — the walk jumped straight to
+  // <body> and returned document-relative numbers, which pushed the shared
+  // photograph completely outside every card and left them blank. The hero
+  // survived that only by accident: its `perspective` makes it a containing
+  // block, so it happened to be an offsetParent. Differencing two absolute
+  // offsets is correct no matter which ancestors are positioned.
+  const target = documentOffset(node);
+  const origin = documentOffset(ancestor);
+  return { x: target.x - origin.x, y: target.y - origin.y };
 }
 
 export default function useMaskPositions(
