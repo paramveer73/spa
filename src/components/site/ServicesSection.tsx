@@ -2,6 +2,7 @@ import { useRef } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import { alpha } from "@mui/material/styles";
 import MaskedCard from "./MaskedCard";
 import { useImageWidth, useIsMobile, useMaskPositions, useStaggeredReveal } from "@/hooks";
 import { BACKDROPS } from "@/lib/images";
@@ -216,13 +217,19 @@ export default function ServicesSection() {
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "space-between",
-                    // The active card belongs to the palette, so it inverts
-                    // with the theme. The inactive cards sit directly on the
-                    // shared photograph, and a photograph does not change with
-                    // the colour mode — so their contrast is driven by a dark
-                    // scrim rather than by the palette. Tying them to the theme
-                    // is what put white text on white glass in light mode.
-                    bgcolor: active ? "background.paper" : "rgba(0,0,0,.42)",
+                    // All four cards are the same palette surface — the active
+                    // one is simply opaque while the rest are a veil over the
+                    // photograph. Keeping them one material is what lets every
+                    // card use text.primary and still stay legible: the text
+                    // contrasts against the veil, never against the photo.
+                    //
+                    // 0.62 is the floor that holds up over the lightest part of
+                    // the current backdrop; much thinner and the image starts
+                    // bleeding through into the type.
+                    bgcolor: (theme) =>
+                      active
+                        ? theme.palette.background.paper
+                        : alpha(theme.palette.background.paper, 0.62),
                     backdropFilter: active ? "blur(12px)" : "blur(20px)",
                     transition: "background-color .3s ease, transform .3s ease",
                     "&:hover": { transform: "translateY(-4px)" },
@@ -235,7 +242,7 @@ export default function ServicesSection() {
                       fontWeight: 800,
                       lineHeight: 1.05,
                       letterSpacing: "-0.02em",
-                      color: active ? "text.primary" : "common.white",
+                      color: "text.primary",
                     }}
                   >
                     {svc.name}
@@ -254,7 +261,7 @@ export default function ServicesSection() {
                       sx={{
                         fontSize: { xs: 11, md: 14 },
                         fontWeight: 700,
-                        color: active ? "text.primary" : "common.white",
+                        color: "text.primary",
                         opacity: 0.9,
                       }}
                     >
@@ -266,8 +273,8 @@ export default function ServicesSection() {
                         height: { xs: 30, md: 44 },
                         borderRadius: "50%",
                         border: 1,
-                        borderColor: active ? "text.primary" : "common.white",
-                        color: active ? "text.primary" : "common.white",
+                        borderColor: "text.primary",
+                        color: "text.primary",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
