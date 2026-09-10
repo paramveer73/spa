@@ -96,10 +96,18 @@ export default function Navbar({ mode, onToggleMode, phone, ready }: NavbarProps
           left: 0,
           right: 0,
           zIndex: 50,
-          display: "flex",
+          // Grid rather than space-between: the wordmark and the action group
+          // have very different heights, and an explicit two-track grid keeps
+          // both centred on one row instead of letting the tallest child
+          // dictate where everything lands.
+          display: "grid",
+          gridTemplateColumns: "1fr auto",
           alignItems: "center",
-          justifyContent: "space-between",
-          px: { xs: 2, md: 3 },
+          columnGap: 2,
+          // Matched to the sections below (px 1.5/2.5). The header was on 2/3,
+          // so the CTA's right edge sat 4px inside the cards beneath it and
+          // never lined up with the content.
+          px: { xs: 1.5, md: 2.5 },
           py: { xs: 1, md: 1.5 },
           bgcolor: bar,
           backdropFilter: "blur(14px)",
@@ -108,7 +116,7 @@ export default function Navbar({ mode, onToggleMode, phone, ready }: NavbarProps
         }}
       >
         {/* 1. Wordmark */}
-        <Box data-nav-item sx={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
+        <Box data-nav-item sx={{ gridColumn: 1, gridRow: 1, display: "flex", flexDirection: "column", lineHeight: 1 }}>
           <Typography
             sx={{
               fontSize: { xs: "1.25rem", md: "1.5rem" },
@@ -148,7 +156,7 @@ export default function Navbar({ mode, onToggleMode, phone, ready }: NavbarProps
         </Box>
 
         {/* 2. Desktop actions */}
-        <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", gap: 2 }}>
+        <Box sx={{ gridColumn: 2, gridRow: 1, display: { xs: "none", md: "flex" }, alignItems: "center", gap: 2 }}>
           <Typography data-nav-item sx={{ fontSize: 14, fontWeight: 600 }}>{phone}</Typography>
           <IconButton
             data-nav-item
@@ -163,6 +171,10 @@ export default function Navbar({ mode, onToggleMode, phone, ready }: NavbarProps
             onClick={scrollToBooking}
             variant="outlined"
             sx={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              lineHeight: 1,
               px: 3,
               py: 1.35,
               fontSize: 13,
@@ -176,7 +188,7 @@ export default function Navbar({ mode, onToggleMode, phone, ready }: NavbarProps
         </Box>
 
         {/* 3. Mobile controls */}
-        <Box sx={{ display: { xs: "flex", md: "none" }, alignItems: "center", gap: 0.5 }}>
+        <Box sx={{ gridColumn: 2, gridRow: 1, display: { xs: "flex", md: "none" }, alignItems: "center", gap: 0.5 }}>
           <IconButton onClick={onToggleMode} aria-label="Toggle colour mode" sx={{ color: "text.primary" }}>
             <ModeIcon mode={mode} />
           </IconButton>
