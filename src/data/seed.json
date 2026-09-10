@@ -1,0 +1,551 @@
+{
+  "meta": {
+    "source": "content.json (scrape of www.ktlnstudio.com)",
+    "generatedBy": "scripts/build-seed.mjs",
+    "generatedAt": "2026-09-10T05:04:49.590Z",
+    "note": "Marketing copy only. Wix widget chrome, form labels and legal boilerplate are excluded — full text remains in content.json."
+  },
+  "business": {
+    "name": "KTLN Studio",
+    "tagline": "Natural-looking microblading, brows and lashes in Clovis, CA.",
+    "phone": "559-466-8233",
+    "email": "ktlnstudio@gmail.com",
+    "address": {
+      "street": "2196 Shaw Ave",
+      "suite": "Suite 05",
+      "city": "Clovis",
+      "state": "CA",
+      "postalCode": "93611",
+      "country": "USA",
+      "mapUrl": "https://maps.app.goo.gl/tWtcwAu3DDk4yZ118"
+    },
+    "serviceArea": [
+      "Clovis, CA",
+      "Fresno, CA"
+    ],
+    "bookingPlatform": {
+      "name": "Vagaro",
+      "url": "https://www.vagaro.com/ktlnstudio"
+    },
+    "googleProfile": "https://g.co/kgs/hwtZuNW",
+    "social": {
+      "instagram": "https://www.instagram.com/ktlnstudio/",
+      "tiktok": "https://www.tiktok.com/@ktlnstudio",
+      "facebook": "https://www.facebook.com/people/KTLN-Studio/61551028865481/"
+    },
+    "depositPolicy": "A 50% non-refundable deposit is required to secure your appointment. You can book through the Vagaro app, click any “Book Now” link on our site, or text us directly at (559) 466-8233."
+  },
+  "stylist": {
+    "name": "Katelyn",
+    "role": "Licensed Esthetician & PMU Artist",
+    "bio": "Katelyn is a precision-based PMU artist with over 7 years of hands-on experience in microblading and natural beauty transformations. Clients trust her not just for her technical skill, but for the calm, grounding energy she brings into every session. Her work is defined by clean technique, subtle enhancement, and lasting results that honor each client’s natural beauty.",
+    "yearsExperience": 7,
+    "certifications": [
+      "Certified in Microblading & PMU Techniques with Beauty Angels Academy.",
+      "Licensed Esthetician",
+      "Trained in Eyelash Extensions with Embellashes.",
+      "Advanced training in nano-strokes Bloodborne Pathogen Certified (California-compliant)"
+    ]
+  },
+  "services": [
+    {
+      "id": "microblading",
+      "slug": "microblading",
+      "name": "Microblading",
+      "category": "brows",
+      "tagline": "✨Soft, natural, and expertly shaped — brows that stay put and turn heads.",
+      "shortDescription": "Soft, natural-looking brow definition.",
+      "longDescription": "Define your shape and restore your confidence with soft, natural-looking hair strokes customized to your face. Perfect for sparse or uneven brows, microblading gives you fuller brows that look effortless every day.",
+      "price": {
+        "amount": 550,
+        "currency": "USD",
+        "display": "$550",
+        "qualifier": "Starting at"
+      },
+      "bookingUrl": "https://www.vagaro.com/cl/1hEA4QFRXDHXiSqMa2oiPDkJ5hZ6-bfmC-58IVZk4TE=",
+      "landing": {
+        "sourceSlug": "microbladinginfresnoca",
+        "headline": "Microblading That Elevates Your Natural Beauty",
+        "guarantee": "LOVE your Brows, GUARANTEED!"
+      },
+      "detail": {
+        "sourceSlug": "what-to-expect-during-microblading",
+        "intro": "Microblading is a detailed, semi-permanent technique that uses fine, hair-like strokes to create naturally fuller brows. It’s perfect for clients who want subtle definition, improved shape, and long-lasting enhancement that looks soft and realistic.",
+        "sections": [
+          {
+            "heading": "What to Expect During Microblading",
+            "body": "Your artist begins by mapping your brows using precise measurements to ensure symmetry and balance. After selecting a pigment shade that matches your natural hair, fine strokes are implanted into the skin to replicate real brow hairs. The process is safe, meticulous, and customized to your features"
+          },
+          {
+            "heading": "Aftercare & Healing",
+            "body": "Proper aftercare helps your results heal beautifully. Avoid sweating, heavy workouts, and moisture on the brow area for the first few days. Mild fading, flaking, and darkening are normal during the healing process. A touch-up session enhances color and ensures long-lasting definition."
+          }
+        ]
+      },
+      "faqs": [
+        {
+          "question": "How long does microblading last?",
+          "answer": "Typically 12–18 months, depending on skin type and aftercare."
+        }
+      ],
+      "seo": {
+        "title": "Microblading | Ktln Studio",
+        "description": "✨Soft, natural, and expertly shaped — brows that stay put and turn heads."
+      }
+    },
+    {
+      "id": "nanoblading",
+      "slug": "nanoblading",
+      "name": "Nanoblading",
+      "category": "brows",
+      "tagline": "✨Soft, natural, and expertly shaped — brows that stay put and turn heads.",
+      "shortDescription": "✨Soft, natural, and expertly shaped — brows that stay put and turn heads.",
+      "longDescription": null,
+      "price": {
+        "amount": null,
+        "currency": "USD",
+        "display": null,
+        "qualifier": null
+      },
+      "bookingUrl": "https://www.vagaro.com/cl/wTuklrB1ZeZYgG9-1Ge7wv8fAWiH4",
+      "landing": {
+        "sourceSlug": "nanobladinginfresnoca",
+        "headline": "Microblading That Elevates Your Natural Beauty",
+        "guarantee": "LOVE your Brows, GUARANTEED!"
+      },
+      "detail": null,
+      "faqs": [],
+      "seo": {
+        "title": "NanoBlading | Ktln Studio",
+        "description": "✨Soft, natural, and expertly shaped — brows that stay put and turn heads."
+      }
+    },
+    {
+      "id": "brow-lamination",
+      "slug": "brow-lamination",
+      "name": "Brow Lamination",
+      "category": "brows",
+      "tagline": "✨ Fuller, fluffier, face-framing brows in just one session — no needles, no downtime, just flawless shape that holds.",
+      "shortDescription": "Keep you brows fresh, flawless and full. Touch ups ensure color, shape and definition of brows stay crisp and long- lasting",
+      "longDescription": null,
+      "price": {
+        "amount": 150,
+        "currency": "USD",
+        "display": "$150",
+        "qualifier": null
+      },
+      "bookingUrl": "https://www.vagaro.com/cl/wTuklrB1ZeZYgG9-1Ge7wv8fAWiH4",
+      "landing": {
+        "sourceSlug": "browlaminationinfresnoca",
+        "headline": "Brow Lamination That Lifts, Defines & Stuns — All Day.",
+        "guarantee": "LOVE your Brows, GUARANTEED!"
+      },
+      "detail": {
+        "sourceSlug": "how-brow-lamination-works",
+        "intro": "Brow lamination is a semi-permanent treatment that smooths, lifts, and shapes the natural brow hairs into a fuller, more defined look. It creates a soft, fluffy finish that lasts for weeks, giving you effortlessly polished brows without daily styling.",
+        "sections": [
+          {
+            "heading": "How Brow Lamination Works",
+            "body": "During the treatment, a gentle lifting solution softens the hair bonds, allowing the brows to be shaped into your desired direction. The hairs are then set in place with a neutralizing formula, creating a lifted, uniform, and fuller appearance that flatters your facial features."
+          },
+          {
+            "heading": "Benefits of Brow Lamination",
+            "body": "Brow lamination is ideal for those with uneven, sparse, or unruly brows. The treatment enhances natural volume, improves symmetry, and provides a sleek, brushed-up look that stays in place. Results typically last 6–8 weeks with minimal maintenance."
+          }
+        ]
+      },
+      "faqs": [],
+      "seo": {
+        "title": "Brow Lamination | Ktln Studio",
+        "description": "✨ Fuller, fluffier, face-framing brows in just one session — no needles, no downtime, just flawless shape that holds."
+      }
+    },
+    {
+      "id": "lash-lift",
+      "slug": "lash-lift",
+      "name": "Lash Lift",
+      "category": "lashes",
+      "tagline": "✨ Ditch the curler. Wake up every day with lifted, curled lashes that last up to 8 weeks — no extensions, no mascara,",
+      "shortDescription": "Lifted lashes without extensions",
+      "longDescription": "Natural lashes but make them POP.Lift and darken your lashes for a wide-eyed mascara free look.",
+      "price": {
+        "amount": 145,
+        "currency": "USD",
+        "display": "$145",
+        "qualifier": "Starting at"
+      },
+      "bookingUrl": "https://www.vagaro.com/cl/37r~AVOEdjxWcAcW77jhnItbRheCzqSDQH86-3PVphA=",
+      "landing": {
+        "sourceSlug": "lashliftinfresnoca",
+        "headline": "Effortless, Natural Lash Perfection — Instantly",
+        "guarantee": "LOVE your Lashes, GUARANTEED!"
+      },
+      "detail": {
+        "sourceSlug": "how-a-lash-lift-works",
+        "intro": "A lash lift enhances your natural lashes by lifting, curling, and defining them from the base upward. The result is a fresh, eye-opening look with minimal maintenance—perfect for clients who want beautiful lashes without extensions or mascara",
+        "sections": [
+          {
+            "heading": "How a Lash Lift Works",
+            "body": "Your lashes are gently shaped around a silicone shield and treated with a lifting solution to create a long-lasting curl. This process lifts each lash individually, making them appear longer, darker, and more voluminous. The treatment is safe, comfortable, and suitable for most lash types."
+          },
+          {
+            "heading": "How Long Results Last",
+            "body": "A lash lift typically lasts 6–8 weeks, depending on your natural lash cycle. You can wear mascara, wash your face, and maintain your normal routine after the first 24 hours. No refills or upkeep are required—just beautifully lifted lashes every day."
+          }
+        ]
+      },
+      "faqs": [],
+      "seo": {
+        "title": "Lash Lift | Ktln Studio",
+        "description": "✨ Ditch the curler. Wake up every day with lifted, curled lashes that last up to 8 weeks — no extensions, no mascara,"
+      }
+    },
+    {
+      "id": "lash-sets",
+      "slug": "lash-sets",
+      "name": "Lash Sets",
+      "category": "lashes",
+      "tagline": "Custom lash sets designed to enhance your eyes with soft, lightweight volume, from natural everyday glam to a fuller, more dramatic look.",
+      "shortDescription": "Custom lash sets designed to enhance your eyes with soft, lightweight volume, from natural everyday glam to a fuller, more dramatic look.",
+      "longDescription": null,
+      "price": {
+        "amount": null,
+        "currency": "USD",
+        "display": null,
+        "qualifier": null
+      },
+      "bookingUrl": "https://www.vagaro.com/cl/wTuklrB1ZeZYgG9-1Ge7wv8fAWiH4",
+      "landing": null,
+      "detail": null,
+      "faqs": [],
+      "seo": {
+        "title": null,
+        "description": "Custom lash sets designed to enhance your eyes with soft, lightweight volume, from natural everyday glam to a fuller, more dramatic look."
+      }
+    },
+    {
+      "id": "pmu-removal",
+      "slug": "pmu-removal",
+      "name": "PMU Removal",
+      "category": "corrective",
+      "tagline": "Whether it’s past work that faded poorly or brows you never loved — we help you get back to your natural beauty with safe, effective PMU removal.",
+      "shortDescription": "Lift old pigment without harsh scarring.",
+      "longDescription": "Safe, clean and precise corrections. Need a fresh start? We offer gentle pigment removal for previously done PMU.",
+      "price": {
+        "amount": 120,
+        "currency": "USD",
+        "display": "$120",
+        "qualifier": "Starting at"
+      },
+      "bookingUrl": "https://www.vagaro.com/cl/0Kt4hfsn00QfjRmLSJAMXUXiuw6qfMqyYZ7iOH3I0TI=",
+      "landing": {
+        "sourceSlug": "pmuremovalinfresnoca",
+        "headline": "Gentle PMU Removal — Clean Slates, Clean Brows.",
+        "guarantee": "LOVE your Brows, GUARANTEED!"
+      },
+      "detail": null,
+      "faqs": [
+        {
+          "question": "What is PMU Removal?",
+          "answer": "PMU (Permanent Makeup) removal is a non-invasive treatment that lifts and extracts unwanted pigment from the skin using a saline or non-laser technique."
+        },
+        {
+          "question": "How many sessions will I need?",
+          "answer": "It varies depending on the depth, age, and color of the pigment. Most clients need between 2–5 sessions for optimal results."
+        },
+        {
+          "question": "Does PMU removal hurt?",
+          "answer": "Most clients report only mild discomfort. We use a numbing agent to ensure your experience is as comfortable as possible."
+        },
+        {
+          "question": "What should I avoid before my appointment?",
+          "answer": "Avoid blood thinners (like caffeine, aspirin, alcohol) 24 hours before your session. Come with no makeup on the treated area."
+        },
+        {
+          "question": "Can you remove old or botched microblading?",
+          "answer": "Yes! We specialize in lifting and correcting old or poorly done brow tattoos, microblading, and other PMU services."
+        },
+        {
+          "question": "Is this better than laser removal?",
+          "answer": "Our non-laser technique is gentler on the skin and specifically designed for delicate facial areas like brows, with less risk of scarring or color distortion."
+        },
+        {
+          "question": "How do I book and is a deposit required?",
+          "answer": "A 50% non-refundable deposit is required to secure your appointment. You can book through the Vagaro app, click any “Book Now” link on our site, or text us directly at (559) 466-8233."
+        }
+      ],
+      "seo": {
+        "title": "PMU Removal | Ktln Studio",
+        "description": "Whether it’s past work that faded poorly or brows you never loved — we help you get back to your natural beauty with safe, effective PMU removal."
+      }
+    },
+    {
+      "id": "teeth-whitening",
+      "slug": "teeth-whitening",
+      "name": "Teeth Whitening",
+      "category": "smile",
+      "tagline": "✨ Instantly lift years of stains in just one session — safe, gentle, and sensitivity-free results you’ll love to show off.",
+      "shortDescription": "Brighter smile in one visit.",
+      "longDescription": "A brighter smile in under an hour. Cosmetic whitening for a confident, camera ready glow.",
+      "price": {
+        "amount": 150,
+        "currency": "USD",
+        "display": "$150",
+        "qualifier": "Starting at"
+      },
+      "bookingUrl": "https://www.vagaro.com/cl/QwPuA8qFJy5p9SgxReYPHN1I0Dwc-rsi7~Pd2UvvHZo=",
+      "landing": {
+        "sourceSlug": "teethwhiteninginfresnoca",
+        "headline": "Whiten Your Smile. Brighten Your Confidence.",
+        "guarantee": "LOVE your Teeth, GUARANTEED!"
+      },
+      "detail": {
+        "sourceSlug": "methods-of-teeth-whitening",
+        "intro": "Teeth whitening is a popular cosmetic procedure that uses bleaching agents to lighten the color of natural teeth and remove stains. The primary active ingredients are typically hydrogen peroxide or carbamide peroxide, which break down stain molecules in the enamel and dentin",
+        "sections": [
+          {
+            "heading": "Methods of Teeth Whitening",
+            "body": "This is the fastest and most effective method, performed by a dentist in a single or a few visits (e.g., Zoom whitening or laser whitening). The dentist applies a high-concentration peroxide gel (15% to 43%) and often uses a special light or heat to accelerate the process. This method provides immediate, dramatic results, often several shades lighter."
+          },
+          {
+            "heading": "Important Considerations",
+            "body": "Before starting any whitening treatment, it is essential to have an oral examination to ensure your teeth and gums are healthy enough. Whitening is not suitable for individuals with gum disease, cavities, or exposed tooth roots."
+          }
+        ]
+      },
+      "faqs": [],
+      "seo": {
+        "title": "Teeth Whitening | Ktln Studio",
+        "description": "✨ Instantly lift years of stains in just one session — safe, gentle, and sensitivity-free results you’ll love to show off."
+      }
+    },
+    {
+      "id": "tinting",
+      "slug": "tinting",
+      "name": "Tinting (Brows/Lashes)",
+      "category": "brows",
+      "tagline": null,
+      "shortDescription": null,
+      "longDescription": null,
+      "price": {
+        "amount": null,
+        "currency": "USD",
+        "display": null,
+        "qualifier": null
+      },
+      "bookingUrl": "https://www.vagaro.com/cl/wTuklrB1ZeZYgG9-1Ge7wv8fAWiH4",
+      "landing": null,
+      "detail": null,
+      "faqs": [],
+      "seo": {
+        "title": null,
+        "description": null
+      }
+    },
+    {
+      "id": "phone-consult",
+      "slug": "phone-consult",
+      "name": "Phone Consult",
+      "category": "consultation",
+      "tagline": "Have questions before booking? Schedule a quick phone consult and we’ll help you choose the right service for your goals, timeline, and comfort level.",
+      "shortDescription": "Have questions before booking? Schedule a quick phone consult and we’ll help you choose the right service for your goals, timeline, and comfort level.",
+      "longDescription": null,
+      "price": {
+        "amount": 0,
+        "currency": "USD",
+        "display": "$0",
+        "qualifier": null
+      },
+      "bookingUrl": "https://www.vagaro.com/cl/wTuklrB1ZeZYgG9-1Ge7wv8fAWiH4",
+      "landing": null,
+      "detail": null,
+      "faqs": [],
+      "seo": {
+        "title": null,
+        "description": "Have questions before booking? Schedule a quick phone consult and we’ll help you choose the right service for your goals, timeline, and comfort level."
+      }
+    },
+    {
+      "id": "brow-mapping",
+      "slug": "brow-mapping",
+      "name": "Brow Mapping",
+      "category": "consultation",
+      "tagline": "Not sure which brow service is right for you? Start with a quick mapping session and get a personalized recommendation.",
+      "shortDescription": "Not sure which brow service is right for you? Start with a quick mapping session and get a personalized recommendation.",
+      "longDescription": null,
+      "price": {
+        "amount": 20,
+        "currency": "USD",
+        "display": "$20",
+        "qualifier": null
+      },
+      "bookingUrl": "https://www.vagaro.com/cl/0cI7vsciRJanDWmmsNDvHsIjJixbCZDEznmGykHjQxA=",
+      "landing": null,
+      "detail": null,
+      "faqs": [],
+      "seo": {
+        "title": null,
+        "description": "Not sure which brow service is right for you? Start with a quick mapping session and get a personalized recommendation."
+      }
+    }
+  ],
+  "bundles": [
+    {
+      "id": "the-barefaced-transformation",
+      "name": "The Barefaced Transformation: Wake Up Flawless",
+      "description": "Designed for the woman who wants to look effortlessly polished from the moment she opens her eyes. This package pairs Nano Blading with a Lash Lift, creating soft, natural-looking brows and lifted lashes that frame your face 24/7. Includes: Nano Blading + Lash Lift Total Value: $745 Your Price: $650 (Save $95)",
+      "price": {
+        "amount": 650,
+        "currency": "USD",
+        "display": "$650",
+        "qualifier": null
+      },
+      "bookingUrl": "https://www.vagaro.com/cl/wTuklrB1ZeZYgG9-1Ge7wv8fAWiH4"
+    },
+    {
+      "id": "glow-go-package",
+      "name": "Glow & Go Package",
+      "description": "Look breathtaking from your bridal shower to your honeymoon. This all-in-one luxury package ensures you’re flawless from every angle. Enjoy timeless brows, captivating lashes, and a radiant smile — all done with expert precision so you can focus on your special moments. Includes: Nano Blading, Lash Lift & Professional Teeth Whitening Total Value: $915 Your Price: $745 (Save $170)",
+      "price": {
+        "amount": 745,
+        "currency": "USD",
+        "display": "$745",
+        "qualifier": null
+      },
+      "bookingUrl": "https://www.vagaro.com/cl/wTuklrB1ZeZYgG9-1Ge7wv8fAWiH4"
+    },
+    {
+      "id": "the-bridal-beauty-package",
+      "name": "The Bridal Beauty Package: Picture-Perfect for Your Big Day",
+      "description": "Look breathtaking from your bridal shower to your honeymoon. This all-in-one luxury package ensures you’re flawless from every angle. Enjoy timeless brows, captivating lashes, and a radiant smile — all done with expert precision so you can focus on your special moments. Includes: Nano Blading, Lash Lift & Professional Teeth Whitening Total Value: $915 Your Price: $745 (Save $170)",
+      "price": {
+        "amount": 745,
+        "currency": "USD",
+        "display": "$745",
+        "qualifier": null
+      },
+      "bookingUrl": "https://www.vagaro.com/cl/wTuklrB1ZeZYgG9-1Ge7wv8fAWiH4"
+    },
+    {
+      "id": "the-brow-transformation",
+      "name": "The Brow Transformation: The Ultimate Brow Makeover",
+      "description": "Elevate your natural brows with this complete, all-in-one transformation. This package includes a seamless blend of Brow Wax, Brow Lamination, Brow Tint, and precise Face Mapping to create fuller, more defined, polished brows that last for weeks.",
+      "price": {
+        "amount": 170,
+        "currency": "USD",
+        "display": "$170",
+        "qualifier": null
+      },
+      "bookingUrl": "https://www.vagaro.com/cl/wTuklrB1ZeZYgG9-1Ge7wv8fAWiH4"
+    }
+  ],
+  "testimonials": [
+    {
+      "quote": "I love my eye brows also decided to get some lashes this time. I have been coming to Katelyn for about 5 years now for microblading. She is amazing. No one can tell that I get my eye brows done 😉.",
+      "author": "Saira Chaudhry",
+      "source": null
+    },
+    {
+      "quote": "Got my brows done yesterday with Katelyn, My eyebrows turned out beautifully, I got so many compliments at work today... My overall experience with her was amazing, clean, cozy, chill environment.. She treated me like we've know each other for years",
+      "author": "Christina G.",
+      "source": null
+    },
+    {
+      "quote": "Katelyn is so professional and definitely knows what’s she’s doing! I had nano brows, eyelash lift, and teeth whitening all for the first time! She was kind enough to explain the process and healing thoroughly, can’t wait to go back and pamper myself some more! She’s great!",
+      "author": "Gina C.",
+      "source": null
+    }
+  ],
+  "faqs": [
+    {
+      "question": "How long does microblading last?",
+      "answer": "Typically 12–18 months, depending on skin type and aftercare."
+    },
+    {
+      "question": "Can I wear mascara with lash extensions?",
+      "answer": null
+    },
+    {
+      "question": "Is teeth whitening safe?",
+      "answer": null
+    },
+    {
+      "question": "How long do results last?",
+      "answer": null
+    },
+    {
+      "question": "Can I remove or adjust my brows later?",
+      "answer": null
+    }
+  ],
+  "home": {
+    "hero": {
+      "headline": "Effortless Beauty. Confident You",
+      "subheadline": "Natural-looking microblading, brows and lashes in Clovis, CA.",
+      "socialProof": "500+ 5-star reviews on Vagaro, Google, and Yelp"
+    },
+    "about": {
+      "headline": "Precision You Can Trust. Results That Still Feel Like You.",
+      "body": [
+        "At KTLN Studio, every service is designed to enhance your natural features — never overpower them. Katelyn is a licensed esthetician and precision-based PMU artist with over seven years of experience in microblading, PMU removal, and lash enhancements, known for creating results that feel soft, balanced, and beautifully personal.",
+        "Clients choose KTLN Studio for more than the final result. They come for a calm, personalized experience, thoughtful guidance, and detail-focused artistry that takes your skin, features, and goals into account so you leave feeling confident, comfortable, and still like yourself."
+      ],
+      "highlights": [
+        "Licensed esthetician with 7+ years of hands-on experience",
+        "Specializing in soft, natural-looking beauty enhancements",
+        "Personalized mapping and recommendations for each client",
+        "Serving clients in Clovis and the Fresno area"
+      ]
+    },
+    "servicesIntro": "If you have any questions about services, you can text us at 559-466-8233",
+    "reviewsIntro": "From Vagaro to Yelp to Google here’s what real clients are saying after their KTLN experience.",
+    "resultsIntro": "Natural-looking transformations from real KTLN Studio clients in Clovis,CA.",
+    "cta": {
+      "headline": "Get Your $20 Brow Mapping Today!",
+      "body": "Not sure which brow service is right for you? Start with a quick mapping session and get a personalized recommendation.",
+      "bookingUrl": "https://www.vagaro.com/cl/0cI7vsciRJanDWmmsNDvHsIjJixbCZDEznmGykHjQxA="
+    }
+  },
+  "posts": [
+    {
+      "id": "discover-ktln-studio-offerings-natural-beauty-enhancements-in-clovis",
+      "slug": "discover-ktln-studio-offerings-natural-beauty-enhancements-in-clovis",
+      "title": "Discover KTLN Studio Offerings: Natural Beauty Enhancements in Clovis",
+      "excerpt": "When you seek subtle, natural beauty enhancements, you deserve a place that understands your unique needs. KTLN Studio in Clovis offers just that - a sanctuary where artistry meets compassion. Whether you are looking to enhance your features or regain confidence after a health journey, this studio provides gentle, expert care tailored just for you.Explore KTLN Studio Offerings: What Makes Them Unique?At KTLN Studio, every service is designed with your comfort and natural beauty in mind. The stud",
+      "body": "All Posts\nSearch\nDiscover KTLN Studio Offerings: Natural Beauty Enhancements in Clovis\nHarnoor Khosa\nFeb 21\n3 min read\nWhen you seek subtle, natural beauty enhancements, you deserve a place that understands your unique needs. KTLN Studio in Clovis offers just that - a sanctuary where artistry meets compassion. Whether you are looking to enhance your features or regain confidence after a health journey, this studio provides gentle, expert care tailored just for you.\nKTLN Studio client results\nExplore KTLN Studio Offerings: What Makes Them Unique?\nAt KTLN Studio, every service is designed with your comfort and natural beauty in mind. The studio specializes in permanent makeup that enhances your features without overpowering them. Their approach is delicate, focusing on subtle transformations that look effortlessly real.\nYou can expect:\nNatural-looking permanent makeup\n: From eyebrows to lips, the pigments are carefully chosen to match your skin tone and style.\nCompassionate care for cancer patients\n: Understanding the sensitivity and special needs during and after treatment.\nPersonalized consultations\n: Every session begins with a detailed discussion to understand your desires and concerns.\nSafe, hygienic environment\n: Strict protocols ensure your safety and peace of mind.\nThis blend of artistry and empathy makes KTLN Studio a trusted choice in Fresno County and Central California.\nThe Art and Science Behind Permanent Makeup\nPermanent makeup is more than just a cosmetic procedure. It is a blend of art and science, requiring precision, skill, and a deep understanding of facial anatomy. At KTLN Studio, the artists use advanced techniques to create enhancements that complement your natural features.\nFor example, eyebrow microblading is done with fine strokes that mimic real hair, creating fullness without harsh lines. Lip blush treatments add a soft tint that enhances your natural lip color, giving a youthful, fresh look. Eyeliner application is subtle yet defining, framing your eyes beautifully.\nThe pigments used are hypoallergenic and designed to fade naturally over time, allowing for adjustments as your preferences evolve. This thoughtful approach ensures your enhancements remain harmonious with your changing appearance.\nMicroblading close-up\nPersonalized Care for Every Individual\nYour journey at KTLN Studio is personal. The team understands that each person’s story and needs are unique, especially for those recovering from cancer or other health challenges. They offer a warm, supportive environment where you can feel safe and cared for.\nDuring your initial consultation, you will discuss your goals, medical history, and any concerns. This helps the artist tailor the treatment to your skin type, tone, and lifestyle. The studio also provides aftercare guidance to ensure optimal healing and lasting results.\nFor cancer patients, permanent makeup can restore features affected by treatment, such as eyebrows lost during chemotherapy. This gentle restoration helps rebuild confidence and a sense of normalcy.\nWhy Choose KTLN Studio Clovis?\nChoosing the right studio for permanent makeup is crucial. KTLN Studio Clovis stands out because of its commitment to quality, safety, and empathy. Their reputation is built on:\nExpertise\n: Skilled artists trained in the latest techniques.\nTrust\n: Transparent communication and honest advice.\nComfort\n: A calm, welcoming atmosphere that puts you at ease.\nResults\n: Natural, beautiful enhancements that boost your confidence.\nYou can learn more about their services and book a consultation by visiting\nktln studio clovis\n.\nEmbrace Your Natural Beauty with Confidence\nEnhancing your natural beauty is a journey, and KTLN Studio is here to guide you every step of the way. Their subtle, artful approach ensures that your enhancements feel like a natural part of you. Whether you want to define your brows, add a hint of color to your lips, or restore features after a health challenge, you will find compassionate care and expert skill at this studio.\nTake the first step toward a refreshed, confident you. Reach out to KTLN Studio and discover how their offerings can make a meaningful difference in your life.\nKTLN Studio client results\nYour natural beauty deserves to shine gently and confidently. KTLN Studio in Clovis is ready to help you achieve just that.\nRecent Posts\nSee All\nPermanent Brows in Clovis: Your Fall & Winter Guide by KTLN Studio\nEnhance Your Beauty with Premium Microblading Services\nUnlock the Power of Personalized Beauty Treatments",
+      "wordCount": 699
+    },
+    {
+      "id": "discover-the-secret-to-natural-looking-lash-lifts",
+      "slug": "discover-the-secret-to-natural-looking-lash-lifts",
+      "title": "Discover the Secret to Natural-Looking Lash Lifts",
+      "excerpt": "Have you been dreaming of having perfectly lifted and curled lashes that look effortlessly natural? Look no further, as we unveil the secret to achieving stunning lash lifts that will leave you feeling glamorous and confident.At KTLN Studio, we specialize in providing top-tier beauty services that cater to women aged 21–50 in the Fresno/Clovis area. Our mission is to enhance your natural beauty with premium microblading, lash lifts, and various beauty treatments, all while offering a personalize",
+      "body": "All Posts\nSearch\nDiscover the Secret to Natural-Looking Lash Lifts\nHarnoor Khosa\nMay 4, 2025\n2 min read\nHave you been dreaming of having perfectly lifted and curled lashes that look effortlessly natural? Look no further, as we unveil the secret to achieving stunning lash lifts that will leave you feeling glamorous and confident.\nAt KTLN Studio, we specialize in providing top-tier beauty services that cater to women aged 21–50 in the Fresno/Clovis area. Our mission is to enhance your natural beauty with premium microblading, lash lifts, and various beauty treatments, all while offering a personalized and luxurious experience that sets us apart as a premium destination for beauty enthusiasts.\nLash lifts have become increasingly popular for those seeking to enhance their natural lashes without the need for extensions. The key to a successful lash lift lies in the technique and skill of the artist. At KTLN Studio, our skilled professionals are trained to deliver natural-looking lash lifts that beautifully enhance your eyes and accentuate your features.\nOne of the secrets to achieving natural-looking lash lifts is the use of high-quality products and tailored techniques that cater to your unique eye shape and desired outcome. By carefully lifting and curling your natural lashes, we can create a wide-eyed and youthful look that lasts for weeks, giving you the perfect low-maintenance beauty solution.\nOur studio exudes a clean, elegant, and feminine vibe, with a color palette of blush pink, nude beige, light cream, and soft gold accents that create a serene and intimate environment for our clients. With a focus on natural-looking results and a personalized experience, we aim to provide you with the ultimate pampering session that leaves you feeling refreshed and rejuvenated.\nIf you're in search of a trusted beauty studio that prioritizes quality, artistry, and customer satisfaction, look no further than KTLN Studio. Book your appointment today and discover the secret to natural-looking lash lifts that will leave you feeling like a true beauty queen.\nRecent Posts\nSee All\nDiscover KTLN Studio Offerings: Natural Beauty Enhancements in Clovis\nPermanent Brows in Clovis: Your Fall & Winter Guide by KTLN Studio\nEnhance Your Beauty with Premium Microblading Services",
+      "wordCount": 359
+    },
+    {
+      "id": "enhance-your-beauty-with-premium-microblading-services",
+      "slug": "enhance-your-beauty-with-premium-microblading-services",
+      "title": "Enhance Your Beauty with Premium Microblading Services",
+      "excerpt": "In the quest for enhancing natural beauty, premium microblading services have emerged as a popular choice among women seeking to redefine their looks effortlessly. KTLN Studio, a trusted beauty sanctuary nestled in the heart of Clovis, California, is dedicated to offering top-tier microblading services tailored to women aged 21–50 in the Fresno/Clovis area.Microblading is a semi-permanent cosmetic procedure that involves delicately etching fine hair-like strokes onto the eyebrows, resulting in f",
+      "body": "All Posts\nSearch\nEnhance Your Beauty with Premium Microblading Services\nHarnoor Khosa\nMay 4, 2025\n2 min read\nIn the quest for enhancing natural beauty, premium microblading services have emerged as a popular choice among women seeking to redefine their looks effortlessly. KTLN Studio, a trusted beauty sanctuary nestled in the heart of Clovis, California, is dedicated to offering top-tier microblading services tailored to women aged 21–50 in the Fresno/Clovis area.\nMicroblading is a semi-permanent cosmetic procedure that involves delicately etching fine hair-like strokes onto the eyebrows, resulting in fuller, more defined brows. This technique not only saves time in daily makeup routines but also enhances facial features for a more polished and put-together look.\nAt KTLN Studio, the art of microblading is elevated to a premium level, with a focus on delivering natural-looking results that complement each client's unique features. The studio's dedication to creating a personalized experience sets it apart as a haven for those seeking expert beauty treatments in a serene and intimate setting.\nIn addition to microblading, KTLN Studio offers lash lifts and other beauty treatments to cater to a diverse range of beauty needs. Whether you're looking to accentuate your eyes with fluttery lashes or achieve perfectly groomed eyebrows, the studio's skilled artists are committed to bringing your beauty visions to life.\nThe studio's clean and elegant aesthetic, coupled with a soft color palette of blush pink, nude beige, and light cream, exudes a sense of femininity and sophistication. Real studio photography and high-resolution before and after images showcase the artistry and expertise behind each treatment, instilling confidence in potential clients.\nWith a keen emphasis on local SEO dominance, KTLN Studio aims to expand its reach beyond Clovis into markets like Los Angeles and Chicago, solidifying its position as a premium destination for beauty services. The studio's commitment to excellence, flexible scheduling, and 5-star customer reviews reflect its unwavering dedication to client satisfaction.\nIn a world where beauty is celebrated in all its forms, KTLN Studio stands out as a beacon of artistry and refinement, where each client is welcomed into a world of beauty and self-care.Embrace the transformative power of premium microblading services at KTLN Studio and unlock a new realm of beauty and confidence.\nRecent Posts\nSee All\nDiscover KTLN Studio Offerings: Natural Beauty Enhancements in Clovis\nPermanent Brows in Clovis: Your Fall & Winter Guide by KTLN Studio\nUnlock the Power of Personalized Beauty Treatments",
+      "wordCount": 403
+    },
+    {
+      "id": "guide-to-perfect-brows-in-clovis-ca",
+      "slug": "guide-to-perfect-brows-in-clovis-ca",
+      "title": "Permanent Brows in Clovis: Your Fall & Winter Guide by KTLN Studio",
+      "excerpt": "Your Fall and Winter Guide to Perfect Brows in Clovis As we dive into spooky season and all the autumn festivities, it’s the perfect time to treat yourself to a little beauty magic. Fall and winter aren’t justcozy seasons—they’re actually the best time of year to get semi-permanent makeup done. Why Fall & Winter Are Ideal for Permanent Brows * Cooler weather = better healing. Your skin heals more comfortably and smoothlyin lower temperatures. Less sweating means a more stable healing environment",
+      "body": "All Posts\nSearch\nPermanent Brows in Clovis: Your Fall & Winter Guide by KTLN Studio\nHarnoor Khosa\nSep 30, 2025\n2 min read\nYour Fall and Winter Guide to Perfect Brows in Clovis As we dive into spooky season and all the autumn festivities, it’s the perfect time to treat yourself to a little beauty magic. Fall and winter aren’t just\ncozy seasons—they’re actually the best time of year to get semi-permanent makeup done. Why Fall & Winter Are Ideal for Permanent Brows * Cooler weather = better healing. Your skin heals more comfortably and smoothly\nin lower temperatures. Less sweating means a more stable healing environment, and reduced sun exposure helps your pigment retain its true color. * Long-lasting beauty, right on time. Semi-permanent brows last 1 to 3 years, so\ngetting them done now means you’ll step into the holiday season and new year with brows that are fully healed and effortlessly flawless.* Seasonal schedules are in your favor. With fewer pool days and less outdoor\nactivity, fall and winter give you the time and space to properly care for your brows during healing. Big Fresno Fair, Fall Gatherings & Feeling Good in Your Own Skin With the Big Fresno Fair just around the corner and cozy fall gatherings filling\nup your calendar, there’s no better moment to feel confident and at ease in your skin. Imagine walking into every event this season with fresh, natural-looking brows that enhance your features—without the daily brow routine. Spooky Season Specials at KTLN Studio\nDon’t forget to check out our Spooky Season Bundles, Packages, and Promos to make your experience even sweeter. These seasonal perks are the perfect treat for you—or even a friend who’s been brow-curious. We’re offering select deals on: - Microblading & Nano Brows\n- Consultations - Packages - Add-on services to complete your glow Ready to Book? If you’ve been thinking about brows for a while, now is the time. Let’s get you holiday-ready with brows that feel like you, just enhanced. KTLN Studio | Clovis, California\nwww.vagaro.com/ktlnstudio\nInstagram: @ktlnstudio (559) 466-8233 Warmly, Katelyn @ KTLN Studio Permanent Brows in clovis\nRecent Posts\nSee All\nDiscover KTLN Studio Offerings: Natural Beauty Enhancements in Clovis\nEnhance Your Beauty with Premium Microblading Services\nUnlock the Power of Personalized Beauty Treatments",
+      "wordCount": 381
+    },
+    {
+      "id": "unlock-the-power-of-personalized-beauty-treatments",
+      "slug": "unlock-the-power-of-personalized-beauty-treatments",
+      "title": "Unlock the Power of Personalized Beauty Treatments",
+      "excerpt": "In the world of beauty treatments, there is a growing demand for personalized experiences that cater to individual needs and preferences. At KTLN Studio, located in Clovis, California, this concept is not just a trend but a core principle that guides every service offered.Specializing in natural microblading, lash lifts, and other premium beauty treatments, KTLN Studio is on a mission to unlock the power of personalized beauty solutions for women aged 21–50 in the Fresno/Clovis area. With a focu",
+      "body": "All Posts\nSearch\nUnlock the Power of Personalized Beauty Treatments\nHarnoor Khosa\nMay 4, 2025\n2 min read\nIn the world of beauty treatments, there is a growing demand for personalized experiences that cater to individual needs and preferences. At KTLN Studio, located in Clovis, California, this concept is not just a trend but a core principle that guides every service offered.\nSpecializing in natural microblading, lash lifts, and other premium beauty treatments, KTLN Studio is on a mission to unlock the power of personalized beauty solutions for women aged 21–50 in the Fresno/Clovis area. With a focus on delivering natural-looking results and a premium studio vibe, KTLN Studio has carved a niche for itself as a trusted destination for those seeking beauty treatments that enhance their features while maintaining authenticity.\nWhat sets KTLN Studio apart is its commitment to providing a personalized experience for each client. From the moment you step into the serene and intimate environment of the studio, you are welcomed into a world where your unique beauty needs are understood and met with precision and care. Whether you are looking to enhance your brows with microblading or give your lashes a lift, the team at KTLN Studio ensures that every treatment is tailored to suit your individual style and preferences.\nBut personalized beauty treatments are not the only thing that KTLN Studio excels at. The studio prides itself on offering flexible scheduling options to accommodate even the busiest of lifestyles. Whether you have a packed schedule or need a last-minute appointment, KTLN Studio goes above and beyond to ensure that you get the beauty treatments you desire, when you need them.\nBeyond its focus on personalized experiences and flexible scheduling, KTLN Studio also boasts the presence of a trusted traveling artist, further solidifying its reputation as a premium destination for beauty treatments. This unique feature allows clients to access the studio's exceptional services not only in Clovis but also in future markets like Los Angeles and Chicago, making KTLN Studio a go-to choice for those who appreciate quality and convenience.\nIn a world where beauty standards are constantly evolving, KTLN Studio stands out for its unwavering commitment to delivering natural-looking results and personalized experiences that empower women to look and feel their best. With a blend of artistry, expertise, and a touch of luxury, KTLN Studio is redefining the beauty industry one personalized treatment at a time.\nRecent Posts\nSee All\nDiscover KTLN Studio Offerings: Natural Beauty Enhancements in Clovis\nPermanent Brows in Clovis: Your Fall & Winter Guide by KTLN Studio\nEnhance Your Beauty with Premium Microblading Services",
+      "wordCount": 433
+    }
+  ]
+}
