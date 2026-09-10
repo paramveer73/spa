@@ -66,9 +66,18 @@ export default function Navbar({ mode, onToggleMode, phone, ready }: NavbarProps
       const timeline = gsap.timeline({ defaults: { ease: "power3.out" } });
 
       timeline.from(barRef.current, { yPercent: -100, duration: 0.7 });
+
+      // Opacity only — deliberately no y offset.
+      //
+      // These items sit on one horizontal row, and a staggered vertical
+      // translate breaks that row while it plays: the button is the last of
+      // the four, so it hung 14px low after the wordmark, phone and toggle had
+      // already landed. The bar reads as settling and then the CTA drops into
+      // it. The bar itself carries all the vertical movement, so the row stays
+      // intact the whole way in.
       timeline.from(
         "[data-nav-item]",
-        { y: 14, autoAlpha: 0, duration: 0.5, stagger: 0.07 },
+        { autoAlpha: 0, duration: 0.5, stagger: 0.07 },
         "-=0.35"
       );
     },
