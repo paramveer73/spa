@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setEmployees, useFirebase } from "@/app_state";
+import { useFirebase } from "@/firebase";
+import { setEmployees } from "@/redux";
 
 export default function useEmployees() {
     const firebase = useFirebase();

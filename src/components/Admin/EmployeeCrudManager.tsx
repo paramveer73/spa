@@ -13,7 +13,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import CancelIcon from "@mui/icons-material/Cancel";
 import SaveIcon from "@mui/icons-material/Save";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import { firebase } from "@/app_state";
+import { firebase } from "@/firebase";
 import EmployeeCard from "./EventsAddingForm/EmployeeCard";
 
 interface Employee {

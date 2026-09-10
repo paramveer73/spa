@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Typography, Card, Box, Grid, Button } from '@mui/material';
-import { useFirebase } from '@/app_state';
+import { useFirebase } from '@/firebase';
 import DetailView from './DetailView';
 
 export default function BookedAppointments() {

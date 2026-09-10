@@ -21,7 +21,7 @@ import {
     Alert
 } from "@mui/material";
 import EmployeeCard from "./EmployeeCard";
-import { useFirebase } from "@/app_state";
+import { useFirebase } from "@/firebase";
 import { useSelector } from "react-redux";
 // Import our new clean API helper functions
 import { generateSlots } from "./useSlotgenerator";

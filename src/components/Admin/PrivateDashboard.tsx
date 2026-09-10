@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { Box, Typography, Stack } from '@mui/material';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
-import { useFirebase } from '@/app_state';
+import { useFirebase } from '@/firebase';
 import EventsAddingForm from './EventsAddingForm';
 import { useSelector } from 'react-redux';
 import 'react-big-calendar/lib/css/react-big-calendar.css';

@@ -1,1 +1,0 @@
-export { default as FirebaseContext, useFirebase } from "./FirebaseContext";

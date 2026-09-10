@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Card, TextField, Button, Typography } from '@mui/material';
 import { ROUTES } from '@/Routes'; // Import your routes constant
-import { useFirebase } from '@/app_state';
+import { useFirebase } from '@/firebase';
 
 export default function Login() {
   const firebase = useFirebase() as any; // Cast as 'any' to stop TS errors
