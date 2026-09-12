@@ -11,13 +11,13 @@ export default function BookedAppointments() {
   const [bookedAppointments, setBookedAppointments] = useState<Record<string, any>>({});
 
   useEffect(() => {
-    const authListener = firebase.auth.onAuthStateChanged(user => {
+    const authListener = firebase?.auth.onAuthStateChanged(user => {
       if (!user) navigate('/login');
     });
 
     // Modern modular real-time database listener
-    const bookedRef = firebase.bookedAppointments();
-    firebase.doOnValue(bookedRef, snapshot => {
+    const bookedRef = firebase?.bookedAppointments();
+    firebase?.doOnValue(bookedRef, snapshot => {
       const val = snapshot.val();
       if (val) {
         const tempState: Record<string, any> = {};
@@ -41,7 +41,7 @@ export default function BookedAppointments() {
     });
 
     return () => {
-      firebase.doOff(bookedRef);
+      firebase?.doOff(bookedRef);
       authListener();
     };
   }, [firebase, navigate]);
@@ -52,7 +52,7 @@ export default function BookedAppointments() {
         <DetailView
           id={id}
           appointments={bookedAppointments[id] || []}
-          handleBookedAppointmentDelete={(u: any) => firebase.deleteBookedAppointment(u)}
+          handleBookedAppointmentDelete={(u: any) => firebase?.deleteBookedAppointment(u)}
         />
       </Container>
     );

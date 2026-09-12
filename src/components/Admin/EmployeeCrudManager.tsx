@@ -56,6 +56,17 @@ export default function EmployeeCrudManager({ employeesList = [] }: EmployeeCrud
 
         setIsSubmitting(true);
         try {
+            // TODO(deleted-employees): archive instead of hard-deleting.
+            // Slots store only `employeeId`, and name/colour are resolved from
+            // the employee record at read time. Erasing the record orphans every
+            // slot that points at it — including ones a client has already
+            // booked, which then can't be traced back to who they were booked
+            // with, rescheduled or cancelled against the right professional.
+            //   1. Move the record to a `deletedEmployees` bucket, keeping the id.
+            //   2. Resolve slot owners against active + deleted employees
+            //      (dashboard, and the list the booking calendar is given), and
+            //      mark deleted owners so their open slots can be managed.
+            //   3. Keep deleted employees out of the pickers for new slots.
             await firebase.deleteEmployee(editingEmployee.id);
             handleCancelEdit();
         } catch (err) {

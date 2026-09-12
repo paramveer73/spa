@@ -1,0 +1,39 @@
+{
+  "name": "KTLN Studio",
+  "wordmark": { "primary": "KTLN", "secondary": "Studio" },
+  "location": "Clovis, California",
+  "slug": "ktln",
+  "seo": {
+    "title": "KTLN Studio — Effortless Beauty, Confident You",
+    "description": "KTLN Studio — soft, natural microblading, brows, lashes and teeth whitening in Clovis, CA."
+  },
+  "copy": {
+    "bookingCta": "Book Appointment",
+    "hero": {
+      "headline": ["Effortless", "Beauty"]
+    },
+    "services": {
+      "heading": ["Our Services", "& Pricing"],
+      "headline": ["Real Results.", "Real Confidence."],
+      "cardCta": "Book Now",
+      "badgeCta": "Book now"
+    },
+    "story": {
+      "kicker": "Precision you can trust",
+      "chapters": ["01 — The Craft", "02 — The Experience", "03 — The Artist"]
+    },
+    "results": {
+      "overline": "The Work",
+      "headline": "Real Results."
+    },
+    "testimonials": {
+      "overline": "Client Reviews"
+    },
+    "contact": {
+      "blurb": "{role} — {years}+ years shaping soft, natural results in {areas}.",
+      "visitLabel": "Visit",
+      "contactLabel": "Contact",
+      "rightsNotice": "All rights reserved."
+    }
+  }
+}

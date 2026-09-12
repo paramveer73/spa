@@ -1,26 +1,100 @@
 # KTLN Studio — Project Conventions
 
-House style is derived from the booking/admin codebase in `src/components/Admin/`,
-`src/components/calendar/`, `src/hooks/`, `src/utils/` and `src/redux+firebase/`.
-**All new components follow these patterns.**
+Architecture follows the arthalaw app: **App → lazy pages → components**.
+Component style is derived from the booking/admin code in `src/components/Admin/`
+and `src/components/calendar/`. **All new work follows these patterns.**
 
-## Layout
+## Architecture
 
 ```
 src/
-  components/<Feature>/          # PascalCase feature folder
-    <Feature>.tsx                # the component
-    index.js                     # barrel: export { default } from './<Feature>'
-    <SubView>.tsx                # sub-views live beside their parent
-    use<Thing>.js                # feature-local hooks/pure logic
-  components/calendar/           # self-contained portable library (see below)
-  hooks/                         # cross-feature reusable hooks
-  utils/                         # pure, framework-free helpers
-  redux+firebase/                # store, slices, Firebase class + context
+  main.tsx                     mounts <App />, nothing else
+  App.tsx                      composition root: providers + <Routes>, no page content
+  Routes.ts                    every client-side path (ROUTES.X)
+  ScrollToTop.ts               resets scroll on navigation
+  pages/
+    index.ts                   lazy() barrel — one chunk per page
+    homePage/                  camelCase folder
+      HomePage.tsx             PascalCase page component
+      index.ts                 export { default } from "./HomePage"
+    adminLayoutPage/           parent route of every admin screen (guard + shell + <Outlet />)
+  components/
+    <Name>/                    PascalCase folder, one component each
+      <Name>.tsx
+      index.ts                 default export + its Props type
+    Admin/  calendar/          feature groups keep their own sub-structure
+  data/                        brand.json, seed.json, typed content, image map — import from "@/data"
+  theme/                       buildTheme, ColorModeProvider / useColorMode
+  redux/                       one folder per slice (+ index barrel), store.js
+  firebase/                    instance, FirebaseContext / useFirebase, useAuthGuard
+  hooks/                       cross-feature hooks
+  utils/                       pure, framework-free helpers (+ *.test.js)
 ```
 
-Every feature folder gets an `index.js` barrel so imports stay
-`./EventsAddingForm`, not `./EventsAddingForm/EventsAddingForm`.
+### The three layers
+
+- **App** mounts app-wide providers once (Router → Redux → Firebase →
+  ColorMode/theme → Suspense) and maps each `ROUTES.X` to `<Pages.X />`. It
+  renders no page content and holds no page state.
+- **Pages** are thin. A page composes components and runs page-level hooks —
+  auth guards, data subscriptions (`useEmployees()`), page choreography (the
+  home splash). Reusable UI never lives in a page.
+- **Components** know nothing about routes or which page they're on. They read
+  app state through hooks (`useColorMode`, `useFirebase`, `useSelector`), take
+  everything else as props, and are imported by path: `@/components/Navbar`.
+
+Dependencies only point down: App → pages → components. Components never import
+pages; pages never import other pages. Navigation uses `ROUTES`, never literals.
+
+### Adding a page
+
+1. Add the path to `ROUTES` in `Routes.ts`.
+2. Create `pages/<name>Page/<Name>Page.tsx` and its `index.ts`.
+3. Add `export const <Name>Page = lazy(() => import("./<name>Page"))` to `pages/index.ts`.
+4. Add the `<Route>` in `App.tsx`.
+
+### Adding an admin screen
+
+Admin screens are child routes of `AdminLayoutPage`, which runs the auth guard
+and the team subscription once, renders `AdminShell` (tabs + sign-out), and
+holds everything back until the session is confirmed. So:
+
+1. Add the path to `ROUTES` under the `/admin` prefix, and a tab to
+   `ADMIN_TABS` in `AdminShell`.
+2. Create the page as usual; it only runs its data hook and renders the screen
+   (`AdminBookingsPage` → `useBookedAppointments()` → `<BookingsTable />`).
+3. Add the child `<Route>` inside the admin `<Route>` in `App.tsx`.
+
+Screens are built from `components/Admin/AdminTable` (shared DataGrid
+settings, filters, cells, `useNow`, `useDialogTarget`), `ConfirmDialog` for
+anything destructive and `NoticeSnackbar` for outcomes — never
+`window.alert`/`window.confirm`. Each feature folder (`Bookings/`,
+`FreeSlots/`, `Employees/`) keeps the stored data shape in one pure module
+(`bookings.ts`, `freeSlots.ts`) and the Firebase calls in one hook.
+
+### Adding a component
+
+Create `components/<Name>/<Name>.tsx` and `components/<Name>/index.ts`
+(`export { default } from "./<Name>"`, plus `export type { <Name>Props }`).
+Import it from `@/components/<Name>` — never from a grab-bag barrel.
+
+## Company-specific content
+
+No company-specific text is hard-coded in components — the site is meant to be
+reusable for another business by editing content, not code.
+
+- `data/brand.json` (hand-edited): name, wordmark, location line, page title
+  and description, headlines and CTA labels, and the `slug` used for storage
+  keys and export filenames. Copy that mixes in data is a `{placeholder}`
+  template filled with `fillTemplate`.
+- `data/seed.json` (generated by `scripts/build-seed.mjs`): business data —
+  services, prices, contact details, reviews.
+- `data/images.ts`: photos and their alt text.
+
+`index.html` gets its `<title>` and description from `brand.json` through the
+`brandHtml` plugin in `vite.config.js`. Code outside the marketing pages (theme,
+admin) imports `@/data/brand` directly: the `@/data` barrel also carries
+`seed.json` and would pull it into every chunk.
 
 ## Component shape
 
@@ -42,8 +116,11 @@ renders what the hook returns and nothing more. `useBookingAvailability.ts`
 owns all of it and `Calendar.tsx` is pure presentation — follow that split
 whenever a component grows past simple rendering.
 
-Pure, testable transforms get their own module and are imported by the
-component that needs them (`generateSlots` in `useSlotgenerator.js`).
+Pure transforms get their own module and are imported by the component that
+needs them (`generateSlots` in `useSlotgenerator.js`, `normalizeBookings` in
+`bookings.ts`). The existing tests beside some of them still run with
+`npm test`; new modules don't add tests — verify with the typecheck, a build
+and the browser.
 
 ## Portable library folders
 
@@ -67,17 +144,21 @@ line exists to work around something.
 
 MUI `sx` prop only — no CSS modules, no styled-components, no stylesheet per
 component. Theme tokens (`primary.main`, `text.secondary`, `background.paper`)
-in preference to hex literals.
-
-Marketing-site components (Header/Footer/Home) are the exception: they use
-`src/index.css` with CSS custom properties.
+in preference to hex literals. MUI 9 no longer accepts layout props directly on
+`Box`/`Stack` (`justifyContent`, `flexWrap`…) — put them in `sx`.
 
 ## State
 
-- Redux Toolkit `createSlice` — never hand-rolled action constants.
+- Redux Toolkit `createSlice` — never hand-rolled action constants; one folder
+  per slice with an `index.js` barrel; store keys match the arthalaw app.
 - `configureStore` — never `createStore`.
-- Firebase reached via `useFirebase()`, never imported as a global singleton.
+- Firebase reached via `useFirebase()` in components; only `App.tsx` imports the
+  instance, to provide it.
+- A context hook for state the app can't run without throws when its provider
+  is missing (`useColorMode`) rather than returning null.
 - `useEffect` subscriptions **always** return their unsubscribe in cleanup.
+- `employeeId` is the only identifier stored on a slot; names and colours are
+  read from the live employee record (`utils/employees.js`).
 
 ## TypeScript
 

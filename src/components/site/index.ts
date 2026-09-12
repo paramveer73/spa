@@ -1,9 +1,0 @@
-export { default as MaskedCard } from "./MaskedCard";
-export { default as SplashScreen } from "./SplashScreen";
-export { default as Navbar } from "./Navbar";
-export { default as HeroSection } from "./HeroSection";
-export { default as ServicesSection } from "./ServicesSection";
-export { default as StorySection } from "./StorySection";
-export { default as ResultsMarquee } from "./ResultsMarquee";
-export { default as TestimonialsSection } from "./TestimonialsSection";
-export { default as ContactSection } from "./ContactSection";

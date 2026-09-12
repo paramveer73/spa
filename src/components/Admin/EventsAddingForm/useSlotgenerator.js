@@ -1,9 +1,17 @@
 import { v4 as uuidv4 } from "uuid";
 
-const DAYS_OF_WEEK = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+/** The salon's working week. Sunday is closed, so it is never generated. */
+export const WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+const DAY_NAMES = ["Sunday", ...WEEKDAYS];
+const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
 /**
  * Safely shifts a date by a given number of days, avoiding timezone and DST drift.
+ *
+ * setDate() moves along the calendar and keeps the wall-clock time, so a 10:00
+ * slot stays at 10:00 across the change back from daylight saving. Adding
+ * N × 24h in milliseconds would land it at 9:00 the week after.
  */
 export const addDaysToDate = (baseDate, days) => {
     const copy = new Date(baseDate.getTime());
@@ -11,119 +19,141 @@ export const addDaysToDate = (baseDate, days) => {
     return copy;
 };
 
+/** "Monday" … "Sunday" for a date. */
+export const weekdayName = (date) => DAY_NAMES[date.getDay()];
+
 /**
- * Core pure function to generate appointment slots based on user criteria.
- * * @param {Date} selectedDate - The start date/time of the base slot
- * @param {Date} selectedEndDate - The end date/time of the base slot
- * @param {string} title - Slot title
- * @param {object} employee - { name, color }
- * @param {object} particularDays - { Monday: boolean, ... }
- * @param {boolean} isEveryDayInWeek - "Every day in Week" checkbox status
- * @param {number} noOfWeeks - Multi-week repeat count
- * @returns {Array} List of generated slot objects
+ * The days that actually get slots: the ones ticked by hand, plus the start
+ * date's own weekday, in Monday→Saturday order.
+ *
+ * The start weekday is derived here rather than stored as a tick. If it were
+ * stored, moving the start from Thursday to Friday would leave Thursday
+ * ticked unless the form tracked which ticks were automatic. Deriving it means
+ * a manual tick survives a start-date change and the automatic one simply
+ * follows the picker.
+ */
+export const effectiveDays = (ticked, startDate) => {
+    const startDay = weekdayName(startDate);
+    return WEEKDAYS.filter((day) => day === startDay || ticked.includes(day));
+};
+
+const isSameDay = (a, b) =>
+    a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+
+/**
+ * Why a start/end pair can't be published, or null if it can. The form uses
+ * this to explain the problem inline; generateSlots enforces the same rules.
+ */
+export const validateSlotWindow = (start, end) => {
+    // The pickers pass an Invalid Date while a value is half-typed. Without this
+    // it would fall through to the checks below and be misreported as a
+    // same-day problem.
+    if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return "Enter a complete start and end time.";
+    if (start.getDay() === 0) return "The salon is closed on Sundays. Pick another start date.";
+    if (end.getTime() <= start.getTime()) return "The end time must be after the start time.";
+    // Every slot is copied from this one window, so an end on another day would
+    // turn each generated slot into a multi-day block.
+    if (!isSameDay(start, end)) return "The end time must be on the same day as the start.";
+    return null;
+};
+
+/**
+ * Builds availability slots from one start/end window.
+ *
+ * Days and weeks are independent:
+ *   - `days` — which weekdays get a slot. The start date's weekday is always
+ *     included, whether or not it is ticked.
+ *   - `noOfWeeks` — how many weeks *after* the start week to continue.
+ *     0 means this week only.
+ *
+ * Week 0 is the Monday–Saturday week containing the start date, and only its
+ * days on or after the start are used — earlier ones have already passed.
+ * Weeks 1…N use every selected day. Each slot keeps the start's time of day
+ * and the window's duration.
+ *
+ * This replaces four separate scenarios that could not combine: ticked days
+ * with weeks > 0 matched none of them and produced only the start slot, and
+ * "every day" counted weeks one short of the weekly repeat.
+ *
+ * @param {object}   args
+ * @param {Date}     args.selectedDate     start of the first slot
+ * @param {Date}     args.selectedEndDate  end of the first slot (same day)
+ * @param {string}   args.title
+ * @param {{id: string}} args.employee     only the id is stored; name and colour are looked up live
+ * @param {string[]} [args.days]           weekday names ticked by hand
+ * @param {number}   [args.noOfWeeks]      additional weeks after the start week
+ * @returns {{id: string, title: string, employeeId: string, start: string, end: string}[]}
+ *          in date order
  */
 export const generateSlots = ({
     selectedDate,
     selectedEndDate,
     title,
     employee,
-    particularDays,
-    isEveryDayInWeek,
-    noOfWeeks,
+    days = [],
+    noOfWeeks = 0,
 }) => {
-    const eventTemplate = {
-        title,
-        employeeId: employee.id,
-    };
+    const problem = validateSlotWindow(selectedDate, selectedEndDate);
+    if (problem) throw new Error(problem);
 
-    // Base slot
-    let generatedEvents = [
-        {
-            ...eventTemplate,
-            id: uuidv4(),
-            start: selectedDate.toString(),
-            end: selectedEndDate.toString(),
-        },
-    ];
+    const duration = selectedEndDate.getTime() - selectedDate.getTime();
+    const selected = new Set(effectiveDays(days, selectedDate));
+    const weeks = Math.max(0, Math.floor(Number(noOfWeeks) || 0));
 
-    const baseStart = selectedDate.getTime();
-    const baseEnd = selectedEndDate.getTime();
-    const duration = baseEnd - baseStart;
+    // Monday of the start's week, at the start's time of day. The start is
+    // never a Sunday (validated above), so getDay() is 1–6 here.
+    const monday = addDaysToDate(selectedDate, 1 - selectedDate.getDay());
 
-    const hasSelectedParticularDays = Object.values(particularDays).some((val) => val);
+    const slots = [];
+    for (let week = 0; week <= weeks; week++) {
+        WEEKDAYS.forEach((dayName, offset) => {
+            if (!selected.has(dayName)) return;
+            const start = addDaysToDate(monday, week * 7 + offset);
+            if (start < selectedDate) return;
 
-    // SCENARIO 1: Particular Weekdays selected, Single Week
-    if (hasSelectedParticularDays && noOfWeeks === 0) {
-        const todayIndex = selectedDate.getDay() - 1; // Mon = 0, Tue = 1, etc.
-
-        DAYS_OF_WEEK.forEach((dayName, idx) => {
-            if (particularDays[dayName] && idx !== todayIndex) {
-                const shiftDays = idx - todayIndex;
-                const startShifted = addDaysToDate(selectedDate, shiftDays);
-                const endShifted = new Date(startShifted.getTime() + duration);
-
-                generatedEvents.push({
-                    ...eventTemplate,
-                    id: uuidv4(),
-                    start: startShifted.toString(),
-                    end: endShifted.toString(),
-                });
-            }
+            slots.push({
+                title,
+                employeeId: employee.id,
+                id: uuidv4(),
+                // Date#toString matches what existing slots already store, and
+                // writeEventData re-parses it to pick each slot's month bucket.
+                start: start.toString(),
+                end: new Date(start.getTime() + duration).toString(),
+            });
         });
     }
+    return slots;
+};
 
-    // SCENARIO 2: Specific days NOT selected, Multi-week repeat of just this single slot
-    if (!isEveryDayInWeek && !hasSelectedParticularDays && noOfWeeks > 0) {
-        for (let week = 1; week <= noOfWeeks; week++) {
-            const startShifted = addDaysToDate(selectedDate, week * 7);
-            const endShifted = new Date(startShifted.getTime() + duration);
+/** Calendar-day index, so DST days (23h / 25h) don't skew the maths. */
+const dayIndex = (date) => Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) / MS_PER_DAY;
 
-            generatedEvents.push({
-                ...eventTemplate,
-                id: uuidv4(),
-                start: startShifted.toString(),
-                end: endShifted.toString(),
-            });
-        }
+/**
+ * Groups generated slots for the confirm dialog: week 0 is the start's week,
+ * then 1, 2, … Empty weeks are omitted.
+ */
+export const groupSlotsByWeek = (slots, startDate) => {
+    const mondayIndex = dayIndex(addDaysToDate(startDate, 1 - startDate.getDay()));
+    const groups = [];
+
+    for (const slot of slots) {
+        const week = Math.floor((dayIndex(new Date(slot.start)) - mondayIndex) / 7);
+        const last = groups[groups.length - 1];
+        if (last && last.week === week) last.slots.push(slot);
+        else groups.push({ week, slots: [slot] });
     }
+    return groups;
+};
 
-    // SCENARIO 3: "Every day in Week" checked, Single Week
-    if (isEveryDayInWeek && noOfWeeks === 0) {
-        const currentDayOfWeek = selectedDate.getDay(); // Sun = 0, Mon = 1, etc.
-        for (let day = currentDayOfWeek + 1; day < 7; day++) {
-            const shiftDays = day - currentDayOfWeek;
-            const startShifted = addDaysToDate(selectedDate, shiftDays);
-            const endShifted = new Date(startShifted.getTime() + duration);
-
-            generatedEvents.push({
-                ...eventTemplate,
-                id: uuidv4(),
-                start: startShifted.toString(),
-                end: endShifted.toString(),
-            });
-        }
-    }
-
-    // SCENARIO 4: "Every day in Week" checked, Multi-week
-    if (isEveryDayInWeek && noOfWeeks > 0) {
-        let relativeDayCounter = 1;
-        for (let week = 0; week < noOfWeeks; week++) {
-            const startDayIndex = week === 0 ? selectedDate.getDay() : 0;
-            for (let day = startDayIndex + 1; day < 7; day++) {
-                const startShifted = addDaysToDate(selectedDate, relativeDayCounter);
-                const endShifted = new Date(startShifted.getTime() + duration);
-
-                generatedEvents.push({
-                    ...eventTemplate,
-                    id: uuidv4(),
-                    start: startShifted.toString(),
-                    end: endShifted.toString(),
-                });
-                relativeDayCounter++;
-            }
-            relativeDayCounter++; // Skip Sundays
-        }
-    }
-
-    return generatedEvents;
+/**
+ * Default start for the form: the next quarter hour, with seconds cleared.
+ * A raw `new Date()` carried the current seconds (e.g. 12:10:37) onto every
+ * slot generated from it.
+ */
+export const nextQuarterHour = (now) => {
+    const d = new Date(now.getTime());
+    const onQuarter = d.getMinutes() % 15 === 0 && d.getSeconds() === 0 && d.getMilliseconds() === 0;
+    d.setSeconds(0, 0);
+    if (!onQuarter) d.setMinutes(Math.floor(d.getMinutes() / 15) * 15 + 15);
+    return d;
 };

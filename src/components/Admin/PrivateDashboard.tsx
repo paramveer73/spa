@@ -8,9 +8,11 @@ import { useSelector } from 'react-redux';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { DeleteEventsDashboard } from './DeleteEventsDashboard/DeleteEventDashboard';
 import ProfessionalFilterBar from './ProfessionalFilterBar'
-import EmployeeCrudManager from './EmployeeCrudManager';
+import { slotColor, slotsForEmployee } from '@/utils/employees';
 
 const localizer = momentLocalizer(moment);
+/** react-big-calendar's own blue, for slots with no owner (or an unknown one). */
+const UNASSIGNED_SLOT_COLOR = '#3174ad';
 const today = new Date();
 
 export default function PrivateDashboard() {
@@ -62,7 +64,12 @@ export default function PrivateDashboard() {
             start: new Date(ev.start),
             end: new Date(ev.end),
             allDay: ev.allDay || false,
-            extra: ev.extra || { employee: 'ALL EMPLOYEES' },
+            // employeeId is the only record of who owns a slot — name and colour
+            // are looked up from the live employee list. This mapping used to
+            // drop it, so the id is carried through explicitly. A slot without
+            // one is unassigned; `extra` now only carries booking status.
+            employeeId: ev.employeeId,
+            extra: ev.extra || {},
           });
         });
       });
@@ -77,22 +84,20 @@ export default function PrivateDashboard() {
   // 3. Simplified, Safe Event Filtering
   // Memoized so we don't run filter on every unrelated render cycle.
   // If no employee card is clicked, it shows all events.
-  const filteredEvents = useMemo(() => {
-    if (!activeEmployee) return eventsToDisplay;
-    return eventsToDisplay.filter(
-      (event) => event.extra?.employee === activeEmployee.name
-    );
-  }, [eventsToDisplay, activeEmployee]);
+  // Matched by id, so a renamed professional keeps their slots.
+  const filteredEvents = useMemo(
+    () => slotsForEmployee(eventsToDisplay, activeEmployee),
+    [eventsToDisplay, activeEmployee]
+  );
 
   // 4. Extracted Clean Event Styling Prop Getter
+  // Colour comes from the owner's live record, never from the slot, so
+  // changing a professional's colour recolours all of their slots at once.
   const handleEventPropGetter = (eventObject: any) => {
-    let backgroundColor = '#3174ad'; // Default fallback Calendar Blue
-
-    if (eventObject.extra?.status === 'booked') {
-      backgroundColor = 'red';
-    } else if (eventObject.extra?.employeeColor) {
-      backgroundColor = eventObject.extra.employeeColor;
-    }
+    const backgroundColor =
+      eventObject.extra?.status === 'booked'
+        ? 'red'
+        : slotColor(eventObject, employeesList, UNASSIGNED_SLOT_COLOR);
 
     return { style: { backgroundColor } };
   };
@@ -119,7 +124,8 @@ export default function PrivateDashboard() {
   };
 
   return (
-    <Box sx={{ p: 3 }}>
+    // No padding of its own: AdminShell pads every screen the same way.
+    <Box>
       {/* Top Employee Selector Bar */}
 
 
@@ -152,7 +158,7 @@ export default function PrivateDashboard() {
         deleteEventsForSure={deleteEventsForSure}
         events={deleteEventsArray}
       />
-      <EmployeeCrudManager employeesList={employeesList} />
+      {/* Team management moved to its own tab (ROUTES.ADMIN_TEAM). */}
     </Box>
 
   );
