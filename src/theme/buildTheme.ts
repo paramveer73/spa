@@ -21,6 +21,13 @@ export const BRAND = {
 
 const DISPLAY_STACK = '"Open Sauce One", -apple-system, BlinkMacSystemFont, sans-serif';
 
+/**
+ * High-contrast serif, used only for hero-scale display type. The sans carries
+ * everything functional; the serif is what makes the top of the page read as a
+ * spa rather than a sportswear brand. Loaded in index.html.
+ */
+export const SERIF_STACK = '"Cormorant Garamond", "Times New Roman", Georgia, serif';
+
 /** Shared across both modes — only colour differs between light and dark. */
 const shared = {
   typography: {

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { brand } from "@/data";
+import Wordmark from "@/components/Wordmark";
 
 const DURATION_MS = 2000;
 const HOLD_MS = 200;
@@ -80,12 +80,7 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
     >
       {/* Wordmark, top-left — the counter anchors bottom-left to balance it. */}
       <Box sx={{ position: "absolute", top: { xs: 24, md: 40 }, left: { xs: 24, md: 40 } }}>
-        <Typography sx={{ fontWeight: 800, letterSpacing: "0.3em", fontSize: { xs: 11, md: 13 }, textTransform: "uppercase" }}>
-          {brand.name}
-        </Typography>
-        <Typography variant="overline" sx={{ color: "text.secondary", fontSize: { xs: 8, md: 9 } }}>
-          {brand.location}
-        </Typography>
+        <Wordmark />
       </Box>
 
       <Typography

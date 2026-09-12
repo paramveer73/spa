@@ -1,85 +1,66 @@
 import { useRef } from "react";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import MaskedCard from "@/components/MaskedCard";
-import {
-  useGsapContext,
-  useImageAspect,
-  useIsMobile,
-  useMaskPositions,
-  usePointerParallax,
-  gsap,
-} from "@/hooks";
-import { BACKDROPS, brand, home, business } from "@/data";
+import { alpha } from "@mui/material/styles";
+import Wordmark from "@/components/Wordmark";
+import { useGsapContext, usePointerParallax, gsap } from "@/hooks";
+import { scrollToBooking } from "@/utils/scroll";
+import { PORTRAITS, brand, business, home } from "@/data";
+import { BRAND, SERIF_STACK } from "@/theme";
 
-const CARD_COUNT = 4;
-const FOCAL = { mobile: 0.7, desktop: 0.8 };
+/** Five glyphs rather than an icon package — this is a rating mark, not UI. */
+const STARS = "★★★★★";
 
 /**
- * How far each card sits off the picture plane, in px. The proof bars step
- * progressively forward and the main card sits furthest back, so the stack
- * reads as receding into the frame rather than as one flat sheet.
+ * Specks of light around the headline. Positions and delays are hand-picked so
+ * the twinkle never falls into a visible rhythm or a straight line.
  */
-const CARD_DEPTH = [90, 62, 34, -30];
+const SPARKLES = [
+  { top: "14%", left: "9%", size: 5, delay: "0s" },
+  { top: "34%", left: "20%", size: 3, delay: "1.7s" },
+  { top: "11%", right: "13%", size: 4, delay: "0.9s" },
+  { top: "41%", right: "8%", size: 6, delay: "2.6s" },
+  { top: "62%", left: "14%", size: 3, delay: "3.4s" },
+  { top: "57%", right: "18%", size: 4, delay: "4.2s" },
+] as const;
 
-/** Three short proof points, taken verbatim from the studio's own copy. */
-const PROOF_BARS = home.about.highlights.slice(0, 3);
+/** Rounded at the top, square at the fold — the photo runs off the bottom edge. */
+const ARCH_RADIUS = "999px 999px 0 0";
 
 export interface HeroSectionProps {
   /** Splash has torn down — safe to play the entrance against final layout. */
   ready: boolean;
 }
 
+/**
+ * Quiet, centred, mostly empty space: a serif headline on cream, one arch of
+ * photography rising from the fold, and light that moves slowly behind it all.
+ * The old stacked photo cards read as editorial sportswear — loud where a
+ * studio should feel calm.
+ */
 export default function HeroSection({ ready }: HeroSectionProps) {
   const sectionRef = useRef<HTMLElement | null>(null);
-  const stageRef = useRef<HTMLDivElement | null>(null);
-  const cardsRef = useRef<(HTMLElement | null)[]>([]);
-  const isMobile = useIsMobile();
+  const archRef = useRef<HTMLDivElement | null>(null);
 
-  const positions = useMaskPositions(sectionRef, cardsRef, CARD_COUNT);
-  const imageAspect = useImageAspect(BACKDROPS.hero);
-  const focalX = isMobile ? FOCAL.mobile : FOCAL.desktop;
+  // Barely-there tilt on the photo alone. GSAP owns the wrapper's transform,
+  // so the parallax writes to the inner frame and the two never fight.
+  usePointerParallax(archRef, { maxTilt: 3.5 });
 
-  // Live tilt toward the cursor, applied to the stage so all four cards share
-  // one camera. Self-disables on touch and under reduced motion.
-  usePointerParallax(stageRef, { maxTilt: 5.5 });
-
-  /**
-   * Entrance: the stack hinges down into place from above the picture plane.
-   * Each card keeps its resting translateZ throughout, so the depth ordering
-   * is established from the first frame instead of snapping in at the end.
-   */
   useGsapContext(
     sectionRef,
     () => {
       if (!ready) return;
-      const cards = cardsRef.current.filter(Boolean) as HTMLElement[];
-      if (!cards.length) return;
 
-      gsap.timeline({ defaults: { ease: "power3.out" } }).from(cards, {
-        rotateX: -68,
-        y: 46,
-        autoAlpha: 0,
-        transformOrigin: "50% 0%",
-        duration: 1.05,
-        stagger: 0.11,
-      });
-
-      gsap.from("[data-hero-copy]", {
-        y: 24,
-        autoAlpha: 0,
-        duration: 0.8,
-        stagger: 0.09,
-        delay: 0.45,
-        ease: "power3.out",
-      });
+      gsap
+        .timeline({ defaults: { ease: "power3.out" } })
+        .from("[data-hero-glow]", { autoAlpha: 0, duration: 1.8 }, 0)
+        .from("[data-hero-line]", { y: 26, autoAlpha: 0, duration: 0.9, stagger: 0.13 }, 0.15)
+        // The arch rises last and slowest, so the page settles rather than lands.
+        .from("[data-hero-arch]", { y: 60, scale: 0.94, autoAlpha: 0, duration: 1.3 }, 0.5);
     },
     [ready]
   );
-
-  const setCardRef = (index: number) => (node: HTMLElement | null) => {
-    cardsRef.current[index] = node;
-  };
 
   return (
     <Box
@@ -87,181 +68,259 @@ export default function HeroSection({ ready }: HeroSectionProps) {
       id="home"
       ref={sectionRef}
       sx={{
-        height: "100dvh",
-        width: "100%",
+        position: "relative",
+        minHeight: "100dvh",
+        display: "flex",
+        flexDirection: "column",
         overflow: "hidden",
-        pt: { xs: 11, md: 12 },
-        px: { xs: 1.5, md: 2.5 },
-        pb: { xs: 0.75, md: 1 },
-        // The camera. Everything inside is positioned in its depth space.
-        perspective: { xs: "1400px", md: "1900px" },
-        perspectiveOrigin: "50% 40%",
+        bgcolor: "background.default",
+        textAlign: "center",
+        pt: { xs: 13, md: 16 },
+        px: { xs: 2.5, md: 4 },
       }}
     >
+      {/* 1. Aura — two slow pools of warm light, plus specks that twinkle */}
       <Box
-        ref={stageRef}
+        aria-hidden
+        data-hero-glow
         sx={{
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          gap: { xs: 0.75, md: 1 },
-          transformStyle: "preserve-3d",
-          willChange: "transform",
+          position: "absolute",
+          inset: 0,
+          pointerEvents: "none",
+          "@keyframes heroDrift": {
+            "0%, 100%": { transform: "translate3d(-50%, 0, 0) scale(1)" },
+            "50%": { transform: "translate3d(-50%, 4%, 0) scale(1.08)" },
+          },
+          "@keyframes heroTwinkle": {
+            "0%, 100%": { opacity: 0, transform: "scale(0.6)" },
+            "50%": { opacity: 0.9, transform: "scale(1)" },
+          },
         }}
       >
-        {/* 1. Proof bars — each a window onto the same photograph */}
-        {PROOF_BARS.map((text, i) => (
-          <MaskedCard
-            key={text}
-            cardRef={setCardRef(i)}
-            bgImage={BACKDROPS.hero}
-            position={positions[i]}
-            imageAspect={imageAspect}
-            focalX={focalX}
-            style={{ transform: `translateZ(${CARD_DEPTH[i]}px)` }}
+        <Box
+          sx={{
+            position: "absolute",
+            top: "-26%",
+            left: "50%",
+            width: "min(1000px, 130vw)",
+            height: "min(1000px, 130vw)",
+            borderRadius: "50%",
+            background: `radial-gradient(circle, ${alpha(BRAND.accent, 0.3)} 0%, transparent 62%)`,
+            filter: "blur(24px)",
+            animation: "heroDrift 17s ease-in-out infinite",
+          }}
+        />
+        <Box
+          sx={{
+            position: "absolute",
+            top: "18%",
+            left: "50%",
+            width: "min(760px, 105vw)",
+            height: "min(760px, 105vw)",
+            borderRadius: "50%",
+            background: `radial-gradient(circle, ${alpha(BRAND.accentSoft, 0.42)} 0%, transparent 66%)`,
+            filter: "blur(30px)",
+            animation: "heroDrift 23s ease-in-out infinite reverse",
+          }}
+        />
+        {SPARKLES.map((speck) => (
+          <Box
+            key={`${speck.top}-${speck.delay}`}
             sx={{
-              width: "100%",
-              height: { xs: 52, md: 76 },
-              flexShrink: 0,
-              transformStyle: "preserve-3d",
-              // Depth cue: the closer a card sits, the harder it casts.
-              boxShadow: `0 ${18 + i * 4}px ${38 + i * 8}px rgba(0,0,0,.28)`,
+              position: "absolute",
+              top: speck.top,
+              left: "left" in speck ? speck.left : undefined,
+              right: "right" in speck ? speck.right : undefined,
+              width: speck.size,
+              height: speck.size,
+              borderRadius: "50%",
+              // White specks vanish against the cream page; on the dark palette
+              // they're the only thing bright enough to read as light.
+              bgcolor: (theme) => (theme.palette.mode === "light" ? BRAND.accent : "common.white"),
+              boxShadow: (theme) =>
+                `0 0 10px 2px ${alpha(theme.palette.mode === "light" ? BRAND.accentSoft : BRAND.accent, 0.9)}`,
+              opacity: 0,
+              animation: `heroTwinkle 6s ease-in-out ${speck.delay} infinite`,
+            }}
+          />
+        ))}
+      </Box>
+
+      {/* 2. The words */}
+      <Box sx={{ position: "relative", zIndex: 1, width: "100%", maxWidth: 900, mx: "auto" }}>
+        <Box data-hero-line>
+          <Wordmark size="md" align="center" />
+        </Box>
+
+        <Typography
+          data-hero-line
+          component="h1"
+          sx={{
+            mt: { xs: 3, md: 4 },
+            fontFamily: SERIF_STACK,
+            fontSize: "clamp(3.4rem, 11vw, 9rem)",
+            fontWeight: 300,
+            lineHeight: 0.92,
+            letterSpacing: "-0.02em",
+            color: "text.primary",
+          }}
+        >
+          {brand.copy.hero.headline[0]}
+          <br />
+          {/* Second line in italic accent: the one flourish in the composition. */}
+          <Box component="span" sx={{ fontStyle: "italic", fontWeight: 400, color: "primary.main" }}>
+            {brand.copy.hero.headline[1]}
+          </Box>
+        </Typography>
+
+        {/* The line that has to land: what the studio is known for, and where. */}
+        <Box
+          data-hero-line
+          sx={{
+            mt: { xs: 3, md: 4 },
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: { xs: 1.5, md: 3 },
+          }}
+        >
+          <Rule />
+          <Typography
+            component="p"
+            variant="overline"
+            sx={{
+              fontSize: { xs: 10, md: 13 },
+              lineHeight: 1.4,
+              color: "text.primary",
+              whiteSpace: { xs: "normal", sm: "nowrap" },
             }}
           >
-            <Box
-              sx={{
-                position: "relative",
-                zIndex: 1,
-                height: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                px: 2,
-                // The shared photo runs light in places; without a scrim the
-                // white label disappears wherever a bar lands on skin tone.
-                bgcolor: "rgba(0,0,0,.34)",
-                backdropFilter: "blur(1px)",
-              }}
-            >
-              <Typography
-                sx={{
-                  fontWeight: 700,
-                  textAlign: "center",
-                  fontSize: { xs: "0.8rem", md: "1.5rem" },
-                  color: "common.white",
-                  textShadow: "0 1px 18px rgba(0,0,0,.45)",
-                }}
-              >
-                {text}
-              </Typography>
-            </Box>
-          </MaskedCard>
-        ))}
+            {brand.copy.hero.secondary}
+          </Typography>
+          <Rule />
+        </Box>
 
-        {/* 2. Main hero card, seated furthest back in the stack */}
-        <MaskedCard
-          cardRef={setCardRef(3)}
-          bgImage={BACKDROPS.hero}
-          position={positions[3]}
-          imageAspect={imageAspect}
-          focalX={focalX}
-          style={{ transform: `translateZ(${CARD_DEPTH[3]}px)` }}
+        <Box
+          data-hero-line
           sx={{
-            width: "100%",
-            flex: 1,
-            minHeight: 0,
-            transformStyle: "preserve-3d",
-            boxShadow: "0 30px 80px rgba(0,0,0,.34)",
+            mt: { xs: 3.5, md: 4.5 },
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            gap: 1.5,
+          }}
+        >
+          <Button
+            onClick={scrollToBooking}
+            variant="contained"
+            sx={{
+              px: { xs: 3.5, md: 5 },
+              py: { xs: 1.4, md: 1.7 },
+              fontSize: { xs: "0.85rem", md: "0.95rem" },
+              bgcolor: "text.primary",
+              color: "background.default",
+              "&:hover": { bgcolor: "text.primary", transform: "translateY(-2px)" },
+            }}
+          >
+            {brand.copy.bookingCta}
+          </Button>
+          <Button
+            href={`tel:${business.phone}`}
+            variant="outlined"
+            sx={{
+              px: { xs: 3.5, md: 5 },
+              py: { xs: 1.4, md: 1.7 },
+              fontSize: { xs: "0.85rem", md: "0.95rem" },
+              color: "text.primary",
+              borderColor: "divider",
+              "&:hover": { borderColor: "text.primary", bgcolor: "transparent", transform: "translateY(-2px)" },
+            }}
+          >
+            {business.phone}
+          </Button>
+        </Box>
+
+        <Box
+          data-hero-line
+          sx={{
+            mt: { xs: 3, md: 4 },
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexWrap: "wrap",
+            gap: 1.25,
+          }}
+        >
+          <Box component="span" sx={{ color: "secondary.main", fontSize: 12, letterSpacing: "0.14em" }}>
+            {STARS}
+          </Box>
+          <Typography component="span" variant="overline" sx={{ color: "text.secondary", fontSize: { xs: 9, md: 10 } }}>
+            {home.hero.socialProof}
+          </Typography>
+        </Box>
+      </Box>
+
+      {/* 3. Arch of photography, running off the fold so the page invites a scroll */}
+      <Box
+        data-hero-arch
+        sx={{
+          position: "relative",
+          zIndex: 1,
+          flex: 1,
+          minHeight: { xs: 180, md: 240 },
+          mt: { xs: 5, md: 7 },
+          mx: "auto",
+          width: { xs: "min(330px, 80vw)", md: "min(560px, 46vw)" },
+          perspective: "1200px",
+        }}
+      >
+        <Box
+          ref={archRef}
+          sx={{
+            position: "absolute",
+            inset: 0,
+            borderRadius: ARCH_RADIUS,
+            overflow: "hidden",
+            boxShadow: `0 40px 90px ${alpha(BRAND.brownDeep, 0.3)}`,
+            "@keyframes heroShimmer": {
+              "0%, 62%": { transform: "translateX(-130%)" },
+              "100%": { transform: "translateX(130%)" },
+            },
           }}
         >
           <Box
+            component="img"
+            src={PORTRAITS.brows}
+            alt={`Microblading at ${brand.name}`}
+            sx={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 35%" }}
+          />
+          {/* Softens the cut where the photo meets the background. */}
+          <Box
+            aria-hidden
             sx={{
               position: "absolute",
               inset: 0,
-              background:
-                "linear-gradient(180deg, rgba(0,0,0,.45) 0%, rgba(0,0,0,.10) 34%, rgba(0,0,0,.62) 72%, rgba(0,0,0,.82) 100%)",
+              background: (theme) =>
+                `linear-gradient(180deg, ${alpha(theme.palette.background.default, 0.55)} 0%, transparent 34%)`,
             }}
           />
-
-          <Typography
-            data-hero-copy
-            sx={{
-              position: "absolute",
-              top: { xs: 16, md: 28 },
-              left: { xs: 16, md: 28 },
-              zIndex: 1,
-              maxWidth: { xs: 200, md: 320 },
-              fontSize: { xs: 11, md: 14 },
-              fontWeight: 600,
-              lineHeight: 1.35,
-              color: "common.white",
-            }}
-          >
-            {home.hero.subheadline}
-          </Typography>
-
+          {/* A slow pass of light across the glass, every few seconds. */}
           <Box
+            aria-hidden
             sx={{
               position: "absolute",
-              bottom: { xs: 20, md: 32 },
-              left: { xs: 12, md: 20 },
-              zIndex: 1,
-              // Lifted off the card face so the headline floats above the photo.
-              transform: "translateZ(48px)",
+              inset: 0,
+              background: "linear-gradient(100deg, transparent 32%, rgba(255,255,255,.32) 48%, transparent 64%)",
+              animation: "heroShimmer 8s ease-in-out infinite",
             }}
-          >
-            <Typography
-              data-hero-copy
-              sx={{
-                display: "block",
-                fontSize: { xs: 11, md: 14 },
-                fontWeight: 600,
-                mb: { xs: 0.5, md: 1 },
-                color: "common.white",
-                letterSpacing: "0.04em",
-              }}
-            >
-              {home.hero.socialProof}
-            </Typography>
-            <Typography
-              data-hero-copy
-              component="h1"
-              sx={{
-                fontSize: "clamp(3rem,11vw,11rem)",
-                fontWeight: 800,
-                lineHeight: 0.79,
-                letterSpacing: "-0.035em",
-                color: "common.white",
-              }}
-            >
-              {brand.copy.hero.headline[0]}
-              <br />
-              {brand.copy.hero.headline[1]}
-            </Typography>
-          </Box>
-
-          <Typography
-            data-hero-copy
-            sx={{
-              // Hidden below md: the display heading wraps to two lines at
-              // narrow widths and would run straight through this.
-              display: { xs: "none", md: "block" },
-              position: "absolute",
-              bottom: 40,
-              right: 32,
-              zIndex: 1,
-              fontSize: 14,
-              fontWeight: 600,
-              color: "common.white",
-              textAlign: "right",
-            }}
-          >
-            {business.address.street}
-            <br />
-            {business.address.city}, {business.address.state}
-          </Typography>
-        </MaskedCard>
+          />
+        </Box>
       </Box>
     </Box>
   );
+}
+
+/** Hairline flanking the secondary line. */
+function Rule() {
+  return <Box aria-hidden sx={{ width: { xs: 28, md: 64 }, height: "1px", bgcolor: "divider", flexShrink: 0 }} />;
 }

@@ -1,6 +1,9 @@
 {
   "name": "KTLN Studio",
-  "wordmark": { "primary": "KTLN", "secondary": "Studio" },
+  "wordmark": {
+    "primary": "KTLN",
+    "secondary": "Studio"
+  },
   "location": "Clovis, California",
   "slug": "ktln",
   "seo": {
@@ -10,17 +13,38 @@
   "copy": {
     "bookingCta": "Book Appointment",
     "hero": {
-      "headline": ["Effortless", "Beauty"]
+      "headline": [
+        "Effortless",
+        "beauty.",
+        "Confident you."
+      ],
+      "secondary": "Best microblading in Clovis",
+      "trustBadge": "Trusted by 500+ clients",
+      "scanLabels": [
+        "Microblading",
+        "Lash Lift",
+        "Teeth Whitening"
+      ]
     },
     "services": {
-      "heading": ["Our Services", "& Pricing"],
-      "headline": ["Real Results.", "Real Confidence."],
+      "heading": [
+        "Our Services",
+        "& Pricing"
+      ],
+      "headline": [
+        "Real Results.",
+        "Real Confidence."
+      ],
       "cardCta": "Book Now",
       "badgeCta": "Book now"
     },
     "story": {
       "kicker": "Precision you can trust",
-      "chapters": ["01 — The Craft", "02 — The Experience", "03 — The Artist"]
+      "chapters": [
+        "01 — The Craft",
+        "02 — The Experience",
+        "03 — The Artist"
+      ]
     },
     "results": {
       "overline": "The Work",
