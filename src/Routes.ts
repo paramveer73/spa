@@ -4,11 +4,14 @@
  */
 export const ROUTES = {
   HOME: "/",
+  // The staff sign-in (email + password). Clients use CLIENT_LOGIN.
   LOGIN: "/signin",
+  CLIENT_LOGIN: "/login",
+  BOOK: "/book",
+  APPOINTMENTS: "/appointments",
   // The admin screens nest under ADMIN_DASHBOARD, which renders their shared
   // frame; the child paths must keep that prefix.
   ADMIN_DASHBOARD: "/admin",
   ADMIN_BOOKINGS: "/admin/bookings",
-  ADMIN_SLOTS: "/admin/slots",
   ADMIN_TEAM: "/admin/team",
 } as const;

@@ -2,19 +2,18 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@/Routes";
 import { useFirebase } from "./FirebaseContext";
+import { SESSION_STATUS, type SessionStatus } from "./sessionStatus";
 
 /** The one method the guard needs from the Firebase class. */
 interface AuthSource {
   onAuthStateChanged: (callback: (user: unknown) => void) => () => void;
 }
 
-export type SessionStatus = "checking" | "signed-in" | "signed-out";
-
 /**
  * Sends anyone without a session to sign-in, and reports where the check is.
  * Call it at the top of any page that must stay private, and render nothing
- * private until it returns "signed-in" — Firebase restores a saved session
- * asynchronously, so for the first moments of every visit it's "checking".
+ * private until it returns SIGNED_IN — Firebase restores a saved session
+ * asynchronously, so for the first moments of every visit it's CHECKING.
  *
  * Ported from arthalaw's app_state with three changes: it reads Firebase
  * through the context instead of importing the instance; it replaces the
@@ -24,12 +23,12 @@ export type SessionStatus = "checking" | "signed-in" | "signed-out";
 export default function useAuthGuard(): SessionStatus {
   const firebase = useFirebase() as AuthSource | null;
   const navigate = useNavigate();
-  const [status, setStatus] = useState<SessionStatus>("checking");
+  const [status, setStatus] = useState<SessionStatus>(SESSION_STATUS.CHECKING);
 
   useEffect(() => {
     if (!firebase) return undefined;
     const unsubscribe = firebase.onAuthStateChanged((user) => {
-      setStatus(user ? "signed-in" : "signed-out");
+      setStatus(user ? SESSION_STATUS.SIGNED_IN : SESSION_STATUS.SIGNED_OUT);
       if (!user) navigate(ROUTES.LOGIN, { replace: true });
     });
     return unsubscribe;

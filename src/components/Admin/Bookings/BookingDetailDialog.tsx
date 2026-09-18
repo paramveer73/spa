@@ -19,11 +19,10 @@ import PersonOutlineIcon from "@mui/icons-material/PersonOutlineOutlined";
 import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined";
 import SpaOutlinedIcon from "@mui/icons-material/SpaOutlined";
 import type { Employee } from "@/components/calendar";
-import { describeOwner } from "@/utils/employees";
 import { formatDate, formatDuration, formatTime } from "@/utils/format";
 import { minutesBetween, timeStatus } from "@/utils/timeframe";
 import { ProfessionalTag, StatusChip } from "../AdminTable";
-import type { Booking } from "./bookings";
+import { bookingOwner, type Booking } from "./bookings";
 
 export interface BookingDetailDialogProps {
     open: boolean;
@@ -70,7 +69,7 @@ export default function BookingDetailDialog({
                         {formatDuration(minutesBetween(booking.start, booking.end))})
                     </DetailRow>
                     <DetailRow icon={<PersonOutlineIcon />} label="Professional">
-                        <ProfessionalTag {...describeOwner(employees, booking.employeeId)} />
+                        <ProfessionalTag {...bookingOwner(employees, booking)} />
                     </DetailRow>
 
                     {/* 2. Contact */}

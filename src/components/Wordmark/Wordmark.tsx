@@ -3,8 +3,8 @@ import Typography from "@mui/material/Typography";
 import { brand } from "@/data";
 
 export interface WordmarkProps {
-  /** "sm" is the splash-screen treatment; "md" opens the hero. */
-  size?: "sm" | "md";
+  /** "sm" is the splash-screen treatment, "md" the navbar's, "lg" the footer's. */
+  size?: "sm" | "md" | "lg";
   /** Adds the location line beneath the name. */
   showLocation?: boolean;
   align?: "left" | "center";
@@ -18,6 +18,7 @@ export interface WordmarkProps {
 const SIZES = {
   sm: { name: { xs: 11, md: 13 }, location: { xs: 8, md: 9 }, tracking: "0.3em" },
   md: { name: { xs: 12, md: 15 }, location: { xs: 9, md: 10 }, tracking: "0.42em" },
+  lg: { name: { xs: 16, md: 20 }, location: { xs: 9, md: 10 }, tracking: "0.38em" },
 } as const;
 
 export default function Wordmark({ size = "sm", showLocation = true, align = "left" }: WordmarkProps) {

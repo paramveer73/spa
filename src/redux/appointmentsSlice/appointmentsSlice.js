@@ -42,4 +42,9 @@ const appointmentsSlice = createSlice({
 export const { addServiceForAppointment, removeServiceForAppointment, resetAppointment } =
   appointmentsSlice.actions;
 
+// The picked services are the cart. One selector each, so the state shape is
+// known here rather than at every useSelector call.
+export const selectCart = (state) => state.appointments;
+export const selectCartCount = (state) => state.appointments.length;
+
 export default appointmentsSlice.reducer;

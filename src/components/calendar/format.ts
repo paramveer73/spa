@@ -22,3 +22,12 @@ export function formatTime(date: Date | null | undefined): string {
     minute: "2-digit",
   }).format(date);
 }
+
+/** 45 → "45 min", 90 → "1 hr 30 min", 120 → "2 hrs". */
+export function formatDuration(minutes: number): string {
+  if (minutes < 60) return `${minutes} min`;
+  const hours = Math.floor(minutes / 60);
+  const remainder = minutes % 60;
+  const hourLabel = `${hours} hr${hours > 1 ? "s" : ""}`;
+  return remainder === 0 ? hourLabel : `${hourLabel} ${remainder} min`;
+}

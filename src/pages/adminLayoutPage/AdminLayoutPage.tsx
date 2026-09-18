@@ -4,7 +4,7 @@ import { LinearProgress } from "@mui/material";
 import AdminShell from "@/components/Admin/AdminShell";
 import AppLoader from "@/components/AppLoader";
 import { useEmployees } from "@/components/calendar";
-import { useAuthGuard, useFirebase } from "@/firebase";
+import { SESSION_STATUS, useAuthGuard, useFirebase } from "@/firebase";
 
 interface SignOutSource {
   doSignOut: () => Promise<void>;
@@ -23,10 +23,10 @@ export default function AdminLayoutPage() {
   // professional filters, the calendar colours and the team table.
   useEmployees();
 
-  // The guard redirects on "signed-out". Until Firebase has confirmed a
+  // The guard redirects on SIGNED_OUT. Until Firebase has confirmed a
   // session nothing private renders — the screens below hold clients' names,
   // emails and phone numbers.
-  if (session !== "signed-in") return <AppLoader />;
+  if (session !== SESSION_STATUS.SIGNED_IN) return <AppLoader />;
 
   const handleSignOut = () => {
     // The guard hears the sign-out and does the redirect.

@@ -1,4 +1,4 @@
-import { matchesProfessional } from "@/utils/employees";
+import { describeOwner, matchesProfessional } from "@/utils/employees";
 import { toDate } from "@/utils/timeframe";
 
 /**
@@ -31,6 +31,12 @@ export interface Booking {
     start: Date;
     end: Date;
     employeeId: string | null;
+    /**
+     * Who it was booked with at the time, kept as written. Shown when there's
+     * no live staff record to resolve `employeeId` against — former staff, or
+     * a legacy record that only ever stored a name.
+     */
+    employeeName?: string;
     /** Path of the free slot this booking took, when the record kept a valid one. */
     eventKey?: string;
 }
@@ -63,12 +69,13 @@ function toBooking(monthKey: string, pushKey: string, raw: unknown): Booking | n
     const legacy = isRecord(raw.userdata);
     const person = legacy ? (raw.userdata as RawRecord) : raw;
 
-    // A record that can't be placed in time can't be filtered, sorted or shown
-    // on a date. The booking backend always writes both, so this only drops
-    // hand-edited or half-written records.
+    // Without a start a record can't be placed in time at all, so it's
+    // dropped. A missing end is kept as a zero-length booking instead: the
+    // oldest records never stored one, and hiding a real booking is worse
+    // than not knowing how long it ran.
     const start = toDate(person.start);
-    const end = toDate(person.end);
-    if (!start || !end) return null;
+    if (!start) return null;
+    const end = toDate(person.end) ?? start;
 
     const eventKey = text(person.eventKey);
     const employeeId = text(person.employeeId) || text(raw.employeeId);
@@ -81,12 +88,14 @@ function toBooking(monthKey: string, pushKey: string, raw: unknown): Booking | n
         monthKey,
         name: text(person.name) || text(person.fullName),
         email: text(person.email),
-        phone: text(person.phone),
+        phone: text(person.phone) || text(person.number),
         message: text(person.message),
         services: serviceNames(raw, legacy),
         start,
         end,
         employeeId: employeeId || null,
+        // `employee` is the legacy name field, so unmigrated records show a name too.
+        employeeName: text(person.employeeName) || text(person.employee) || undefined,
         eventKey: SLOT_PATH.test(eventKey) ? eventKey : undefined,
     };
 }
@@ -103,6 +112,17 @@ export function normalizeBookings(tree: unknown): Booking[] {
         }
     }
     return bookings;
+}
+
+/**
+ * Who a booking is with, as the admin should show it: the live staff record
+ * when `employeeId` still resolves, otherwise the name it was booked under,
+ * otherwise "Unassigned".
+ */
+export function bookingOwner(employees: { id: string; name: string; color: string }[], booking: Booking) {
+    const owner = describeOwner(employees, booking.employeeId);
+    if (!owner.missing || !booking.employeeName) return owner;
+    return { name: booking.employeeName, color: undefined, missing: true };
 }
 
 /**

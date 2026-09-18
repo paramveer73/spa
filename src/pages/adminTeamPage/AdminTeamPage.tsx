@@ -10,14 +10,14 @@ import { selectEmployees } from "@/redux";
  */
 export default function AdminTeamPage() {
   const employees: StaffMember[] = useSelector(selectEmployees);
-  const { slots } = useFreeSlots();
+  const { openSlots } = useFreeSlots();
   const { bookings } = useBookedAppointments();
   const { saveEmployee, removeEmployee } = useEmployeeActions();
 
   return (
     <EmployeesTable
       employees={employees}
-      slots={slots}
+      slots={openSlots}
       bookings={bookings}
       onSaveEmployee={saveEmployee}
       onDeleteEmployee={removeEmployee}

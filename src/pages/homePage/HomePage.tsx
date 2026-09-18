@@ -44,7 +44,7 @@ export default function HomePage() {
 
       {/* 2. Sections, top to bottom */}
       <HeroSection ready={!showSplash} />
-      <ServicesSection />
+
       <StorySection />
       <ResultsMarquee />
       <TestimonialsSection />

@@ -1,9 +1,19 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  GoogleAuthProvider,
+  getAuth,
+  isSignInWithEmailLink,
+  onAuthStateChanged,
+  sendSignInLinkToEmail,
+  signInWithEmailAndPassword,
+  signInWithEmailLink,
+  signInWithPopup,
+  signOut,
+} from "firebase/auth";
 import {
   getDatabase, ref, query, orderByKey, startAt, limitToFirst, onValue, push, update, off
 } from "firebase/database";
-import { getAnalytics } from "firebase/analytics";
+import { initializeAnalytics, isSupported, logEvent } from "firebase/analytics";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDtn0BFdmGabvVAQGy-xeoSqOCc7WwmM40",
@@ -22,8 +32,39 @@ class Firebase {
     const app = initializeApp(firebaseConfig);
     this.auth = getAuth(app);
     this.db = getDatabase(app);
-    this.analytics = getAnalytics(app);
+    // A promise, not the instance: getAnalytics throws where GA can't run
+    // (IndexedDB blocked in private windows, some in-app browsers), and a
+    // throw here would take the whole site down. The automatic first
+    // page_view is off because PageViewTracker logs every route itself —
+    // leaving it on would count the landing page twice.
+    this.analytics = isSupported()
+      .then((ok) => (ok ? initializeAnalytics(app, { config: { send_page_view: false } }) : null))
+      .catch(() => null);
   }
+
+
+  /** ANALYTICS API */
+
+  /** Fire-and-forget: queues behind the analytics promise, and does nothing where GA is unsupported. */
+  logAnalyticsEvent = (name, params) => {
+    this.analytics.then((analytics) => analytics && logEvent(analytics, name, params));
+  };
+
+  /**
+   * One page view per route. `pageName` is the page's ROUTES key — the
+   * document title never changes in this SPA, so GA's page-title reports
+   * would otherwise lump every page together.
+   */
+  logPageView = (pageName, path) =>
+    this.logAnalyticsEvent("page_view", {
+      page_title: pageName,
+      page_path: path,
+      page_location: window.location.href,
+    });
+
+  /** `location` names the button that was clicked ("navbar", "contact"…); `params` adds context such as the service. */
+  logBookNowClick = (location, params = {}) =>
+    this.logAnalyticsEvent("book_now_click", { cta_location: location, ...params });
 
 
   /** REALTIME DATABASE API */
@@ -66,6 +107,27 @@ class Firebase {
   doSignInWithEmailAndPassword = (email, password) => signInWithEmailAndPassword(this.auth, email, password);
 
   doSignOut = () => signOut(this.auth);
+
+  /**
+   * A popup rather than signInWithRedirect: the redirect flow depends on
+   * third-party storage for the auth domain, which Safari and Chrome now
+   * partition, so on phones it returns with no user. `select_account` shows
+   * the account chooser even when one Google account is already signed in —
+   * booking from a shared or family device shouldn't silently use theirs.
+   */
+  doSignInWithGoogle = () => {
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: "select_account" });
+    return signInWithPopup(this.auth, provider);
+  };
+
+  /** Emails a one-time sign-in link that opens `returnUrl` (must be on an authorised domain). */
+  doSendSignInLinkToEmail = (email, returnUrl) =>
+    sendSignInLinkToEmail(this.auth, email, { url: returnUrl, handleCodeInApp: true });
+
+  isSignInWithEmailLink = (link) => isSignInWithEmailLink(this.auth, link);
+
+  doSignInWithEmailLink = (email, link) => signInWithEmailLink(this.auth, email, link);
 
   currentUser = () => ref(this.db, 'appointments');
 

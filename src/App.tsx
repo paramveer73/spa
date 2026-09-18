@@ -2,9 +2,10 @@ import { Suspense } from "react";
 import { Provider } from "react-redux";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import AppLoader from "@/components/AppLoader";
-import { FirebaseContext, firebase } from "@/firebase";
+import { FirebaseContext, SessionProvider, firebase } from "@/firebase";
 import * as Pages from "@/pages";
 import { store } from "@/redux";
+import PageViewTracker from "@/PageViewTracker";
 import { ROUTES } from "@/Routes";
 import ScrollToTop from "@/ScrollToTop";
 import { ColorModeProvider } from "@/theme";
@@ -19,25 +20,30 @@ export default function App() {
     <BrowserRouter>
       <Provider store={store}>
         <FirebaseContext.Provider value={firebase}>
-          <ColorModeProvider>
-            <ScrollToTop />
-            <Suspense fallback={<AppLoader />}>
-              <Routes>
-                <Route path={ROUTES.HOME} element={<Pages.HomePage />} />
-                <Route path={ROUTES.LOGIN} element={<Pages.LoginPage />} />
-                {/* Admin screens share one guarded frame; each child is its own chunk. */}
-                <Route path={ROUTES.ADMIN_DASHBOARD} element={<Pages.AdminLayoutPage />}>
-                  <Route index element={<Pages.AdminDashboardPage />} />
-                  <Route path={ROUTES.ADMIN_BOOKINGS} element={<Pages.AdminBookingsPage />} />
-                  <Route path={ROUTES.ADMIN_SLOTS} element={<Pages.AdminSlotsPage />} />
-                  <Route path={ROUTES.ADMIN_TEAM} element={<Pages.AdminTeamPage />} />
-                  <Route path="*" element={<Navigate to={ROUTES.ADMIN_DASHBOARD} replace />} />
-                </Route>
-                {/* Hosting rewrites every path to index.html, so unknown ones land here. */}
-                <Route path="*" element={<Navigate to={ROUTES.HOME} replace />} />
-              </Routes>
-            </Suspense>
-          </ColorModeProvider>
+          <SessionProvider>
+            <ColorModeProvider>
+              <ScrollToTop />
+              <PageViewTracker />
+              <Suspense fallback={<AppLoader />}>
+                <Routes>
+                  <Route path={ROUTES.HOME} element={<Pages.HomePage />} />
+                  <Route path={ROUTES.LOGIN} element={<Pages.LoginPage />} />
+                  <Route path={ROUTES.CLIENT_LOGIN} element={<Pages.ClientLoginPage />} />
+                  <Route path={ROUTES.BOOK} element={<Pages.BookingPage />} />
+                  <Route path={ROUTES.APPOINTMENTS} element={<Pages.AppointmentsPage />} />
+                  {/* Admin screens share one guarded frame; each child is its own chunk. */}
+                  <Route path={ROUTES.ADMIN_DASHBOARD} element={<Pages.AdminLayoutPage />}>
+                    <Route index element={<Pages.AdminDashboardPage />} />
+                    <Route path={ROUTES.ADMIN_BOOKINGS} element={<Pages.AdminBookingsPage />} />
+                    <Route path={ROUTES.ADMIN_TEAM} element={<Pages.AdminTeamPage />} />
+                    <Route path="*" element={<Navigate to={ROUTES.ADMIN_DASHBOARD} replace />} />
+                  </Route>
+                  {/* Hosting rewrites every path to index.html, so unknown ones land here. */}
+                  <Route path="*" element={<Navigate to={ROUTES.HOME} replace />} />
+                </Routes>
+              </Suspense>
+            </ColorModeProvider>
+          </SessionProvider>
         </FirebaseContext.Provider>
       </Provider>
     </BrowserRouter>

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useFirebase } from "@/firebase";
-import { normalizeFreeSlots, type OpenSlot } from "./freeSlots";
+import { normalizeFreeSlots, openOnly, type OpenSlot } from "./freeSlots";
 
 /** The slice of the Firebase class this hook uses. */
 interface FreeSlotsSource {
@@ -10,8 +10,12 @@ interface FreeSlotsSource {
 }
 
 /**
- * Live list of open slots, plus deleting a batch of them in one atomic write.
- * Unsubscribes through `onValue`'s own return — see useBookedAppointments.
+ * Live slot list, plus deleting a batch of them in one atomic write.
+ *
+ * Returns both cuts of the same subscription: `slots` is everything the
+ * schedule calendar draws (booked-in-place included) and `openSlots` is what a
+ * client could still book. Unsubscribes through `onValue`'s own return — see
+ * useBookedAppointments.
  */
 export default function useFreeSlots() {
     const firebase = useFirebase() as FreeSlotsSource | null;
@@ -35,5 +39,5 @@ export default function useFreeSlots() {
         [firebase],
     );
 
-    return { slots, loading, deleteSlots };
+    return { slots, openSlots: openOnly(slots), loading, deleteSlots };
 }

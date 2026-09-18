@@ -16,7 +16,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
-import { formatDate, formatTime } from "./format";
+import { formatDate, formatDuration, formatTime } from "./format";
 import useBookingAvailability, { isSameDay } from "./useBookingAvailability";
 import type { BookingDataSource, Employee, Slot } from "./types";
 
@@ -32,6 +32,10 @@ export interface CalendarProps {
    * assumption that a multi-step wizard exists — a host with no wizard at
    * all can pass something as simple as `onSlotClicked={submitBooking}`. */
   onSlotClicked: (slot: Slot) => void;
+  /** Only offer start times with this many minutes free in a row with the
+   * same professional (back-to-back slots count as one stretch). Omit or 0
+   * to offer every open slot. */
+  requiredMinutes?: number;
 }
 
 /**
@@ -56,6 +60,7 @@ export default function Calendar({
   firebase,
   employees,
   onSlotClicked,
+  requiredMinutes = 0,
 }: CalendarProps) {
   const [datePickerAnchor, setDatePickerAnchor] =
     useState<HTMLElement | null>(null);
@@ -75,7 +80,10 @@ export default function Calendar({
     handleCalendarMonthChange,
     handleUserTimeSlotClick,
     slotGroupsForSelectedDate,
-  } = useBookingAvailability({ firebase, employees, onSlotClicked });
+  } = useBookingAvailability({ firebase, employees, onSlotClicked, requiredMinutes });
+
+  const lengthNote = requiredMinutes > 0 ? ` long enough for ${formatDuration(requiredMinutes)}` : "";
+  const staffNote = employee ? ` for ${employee.name}` : "";
 
   return (
     <Container maxWidth="lg" sx={{ py: { xs: 3, md: 4 } }}>
@@ -182,7 +190,10 @@ export default function Calendar({
                           px: 0.5,
 
                           // --- 1. Shape & Border Settings ---
-                          borderRadius: (theme) => theme.shape.borderRadius, // Sharp corners (0)
+                          // As px, not a bare number: sx treats a unit-less
+                          // borderRadius as a *multiple* of theme.shape.borderRadius,
+                          // so this used to square to 256px and round the chip into a pill.
+                          borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                           border: "1px solid",
                           borderColor: isSelected ? "primary.main" : "text.secondary", // Uses #111111 or #444444
 
@@ -338,16 +349,25 @@ export default function Calendar({
                 <Typography
                   variant="subtitle1"
                   align="center"
-                  sx={{ fontWeight: 600, mb: 1.5 }}
+                  sx={{ fontWeight: 600, mb: requiredMinutes > 0 ? 0.25 : 1.5 }}
                 >
                   {formatDate(selectedDate)}
                 </Typography>
 
+                {/* Says why times are missing, so a short day doesn't read as a broken calendar. */}
+                {requiredMinutes > 0 && (
+                  <Typography
+                    variant="caption"
+                    align="center"
+                    sx={{ display: "block", color: "text.secondary", mb: 1.5 }}
+                  >
+                    Showing times with {formatDuration(requiredMinutes)} free in a row
+                  </Typography>
+                )}
+
                 {slotGroupsForSelectedDate.length === 0 ? (
                   <Typography variant="body2" color="text" align="center">
-                    No openings this day
-                    {employee ? `for ${employee.name}` : ""}.
-                    Try another date.
+                    No openings{lengthNote} this day{staffNote}. Try another date.
                   </Typography>
                 ) : (
                   slotGroupsForSelectedDate.map((group) => (
@@ -381,8 +401,8 @@ export default function Calendar({
                                 flexShrink: 0,
 
                                 // --- 1. Shape & Border ---
-                                // Reads directly from theme.shape.borderRadius (which is 0)
-                                borderRadius: (theme) => theme.shape.borderRadius,
+                                // px, not a bare number — see the day chip above.
+                                borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                                 border: "1px solid",
                                 // Uses the customized employee indicator color, falling back to your brand's primary color
                                 borderColor: empColor || "primary.main",
@@ -498,7 +518,8 @@ export default function Calendar({
                                   fontWeight: "typography.caption.fontWeight"
                                 }}
                               >
-                                End: {formatTime(slot.end)}
+                                {/* The appointment's own end when filtering by length — it can run past this slot. */}
+                                End: {formatTime(slot.appointmentEnd ?? slot.end)}
                               </Typography>
                             </Box>
                           );

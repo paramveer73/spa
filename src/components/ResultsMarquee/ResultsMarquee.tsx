@@ -92,6 +92,8 @@ export default function ResultsMarquee() {
               borderRadius: { xs: 3, md: 4 },
               overflow: "hidden",
               flexShrink: 0,
+              transition: "box-shadow .45s ease",
+              "&:hover": { boxShadow: "0 26px 60px rgba(61,46,33,.34)" },
               // Alternating offset keeps the strip from reading as a flat row.
               mt: i % 2 === 1 ? { xs: 3, md: 6 } : 0,
             }}

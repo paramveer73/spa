@@ -1,6 +1,21 @@
 import { createTheme, type Theme } from "@mui/material/styles";
 
 /**
+ * The real weights of the display face, self-hosted.
+ *
+ * The site previously pulled one 400-weight file from a third-party CDN and
+ * named the bold file as a *separate* family ("Open Sauce One Bold"), which
+ * nothing referenced — so every 600/700/800 heading was a browser-synthesised
+ * fake bold. It reads passably at caption size and smears at hero size.
+ * Imported here because this is the module that names the family.
+ */
+import "@fontsource/open-sauce-one/400.css";
+import "@fontsource/open-sauce-one/500.css";
+import "@fontsource/open-sauce-one/600.css";
+import "@fontsource/open-sauce-one/700.css";
+import "@fontsource/open-sauce-one/800.css";
+
+/**
  * Two palettes, one shape. Every component reads semantic tokens
  * (`background.paper`, `text.primary`, `divider`) rather than hex literals,
  * so the whole site inverts correctly when the mode flips — including the
@@ -20,13 +35,6 @@ export const BRAND = {
 } as const;
 
 const DISPLAY_STACK = '"Open Sauce One", -apple-system, BlinkMacSystemFont, sans-serif';
-
-/**
- * High-contrast serif, used only for hero-scale display type. The sans carries
- * everything functional; the serif is what makes the top of the page read as a
- * spa rather than a sportswear brand. Loaded in index.html.
- */
-export const SERIF_STACK = '"Cormorant Garamond", "Times New Roman", Georgia, serif';
 
 /** Shared across both modes — only colour differs between light and dark. */
 const shared = {

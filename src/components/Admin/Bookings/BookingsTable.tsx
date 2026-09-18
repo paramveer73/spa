@@ -10,7 +10,7 @@ import {
 import EventBusyOutlinedIcon from "@mui/icons-material/EventBusyOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import type { Employee } from "@/components/calendar";
-import { ALL_PROFESSIONALS, describeOwner, effectiveProfessionalFilter } from "@/utils/employees";
+import { ALL_PROFESSIONALS, effectiveProfessionalFilter } from "@/utils/employees";
 import { formatDate, formatTime } from "@/utils/format";
 import {
     TIME_STATUS_LABELS,
@@ -41,7 +41,7 @@ import {
 import ConfirmDialog from "../ConfirmDialog";
 import NoticeSnackbar, { type Notice } from "../NoticeSnackbar";
 import BookingDetailDialog from "./BookingDetailDialog";
-import { bookingsForProfessional, type Booking } from "./bookings";
+import { bookingOwner, bookingsForProfessional, type Booking } from "./bookings";
 
 export interface BookingsTableProps {
     bookings: Booking[];
@@ -120,8 +120,8 @@ export default function BookingsTable({ bookings, employees, loading, onCancelBo
                 headerName: "Professional",
                 flex: 1,
                 minWidth: 170,
-                valueGetter: (_value, row) => describeOwner(employees, row.employeeId).name,
-                renderCell: ({ row }) => <ProfessionalTag {...describeOwner(employees, row.employeeId)} />,
+                valueGetter: (_value, row) => bookingOwner(employees, row).name,
+                renderCell: ({ row }) => <ProfessionalTag {...bookingOwner(employees, row)} />,
             },
             {
                 field: "status",
@@ -215,7 +215,7 @@ export default function BookingsTable({ bookings, employees, loading, onCancelBo
                     <>
                         <Typography variant="body2" sx={{ mb: 1.5 }}>
                             <strong>{clientName(target)}</strong> on {formatDate(target.start)} at {formatTime(target.start)}{" "}
-                            with {describeOwner(employees, target.employeeId).name}.
+                            with {bookingOwner(employees, target).name}.
                         </Typography>
                         <Typography variant="body2" sx={{ color: "text.secondary" }}>
                             The booking is deleted and the time doesn&apos;t go back on the calendar. Publish it again from

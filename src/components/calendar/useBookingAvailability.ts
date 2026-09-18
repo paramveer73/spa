@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
+import { slotsWithContinuousTime } from "./continuousTime";
 import type {
   Employee,
   Slot,
@@ -95,6 +96,7 @@ export default function useBookingAvailability({
   firebase,
   employees,
   onSlotClicked,
+  requiredMinutes,
 }: UseBookingAvailabilityArgs) {
   const [today] = useState(() => normalizeDate(new Date()));
 
@@ -128,16 +130,26 @@ export default function useBookingAvailability({
     return () => unsubscribe();
   }, [firebase, monthFetchingOffset, today]);
 
+  // Booked slots come out before runs are built, so one can't bridge two
+  // open stretches into a run that isn't really free.
+  const bookableSlots = useMemo(
+    () =>
+      slotsWithContinuousTime(
+        eventsToDisplay.filter((event) => !event.extra?.status),
+        requiredMinutes,
+      ),
+    [eventsToDisplay, requiredMinutes],
+  );
+
   /**
-   * Filters slots matching the selected date and active employeeId.
+   * Filters slots matching the selected date and active employeeId. Every
+   * per-day view — the chips' dots, the picker's disabled dates, the
+   * earliest-time tooltip — goes through here, so they all honour
+   * `requiredMinutes` too.
    */
   const getSlotsForDate = (date: Date, employee: Employee | null): Slot[] => {
-    return eventsToDisplay.filter((event) => {
-      // 1. Core checks: Must be the same day and must not be booked
+    return bookableSlots.filter((event) => {
       if (!isSameDay(event.start, date)) return false;
-      if (event.extra?.status) return false;
-
-      // 2. Kotlin-like safe check: If we have an employee, filter by their ID
       return !employee?.id || event.employeeId === employee.id;
     });
   };
@@ -168,14 +180,12 @@ export default function useBookingAvailability({
   useEffect(() => {
     if (autoSelectedRef.current || eventsToDisplay.length === 0) return;
     const SCAN_WINDOW_DAYS = 60;
-    for (let i = 0; i < SCAN_WINDOW_DAYS; i += 1) {
-      const candidate = addDays(today, i);
-      if (dayHasOpening(candidate)) {
-        selectDate(candidate);
-        autoSelectedRef.current = true;
-        break;
-      }
-    }
+    const firstOpenDay = Array.from({ length: SCAN_WINDOW_DAYS }, (_, i) => addDays(today, i)).find(dayHasOpening);
+    // Nothing open — typically a cart too long for any run of free time.
+    // Landing on today shows the "no openings" message; leaving nothing
+    // selected would sit on "Loading availability…" for good.
+    selectDate(firstOpenDay ?? today);
+    autoSelectedRef.current = true;
   }, [eventsToDisplay, employee]);
 
   const visibleDays = useMemo(() => {

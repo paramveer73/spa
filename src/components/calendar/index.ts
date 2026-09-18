@@ -11,6 +11,8 @@ export {
   monthsAhead,
 } from "./useBookingAvailability";
 
+export { slotsWithContinuousTime } from "./continuousTime";
+
 export { default as useEmployees } from './useEmployees'
 
 export type {

@@ -30,6 +30,11 @@ export interface Slot {
    * raw data coming out of the data source. */
   employeeName?: string;
   employeeColor?: string;
+  /** Set only when filtering by `requiredMinutes`: when an appointment of
+   * that length starting here would finish — possibly in a later slot. */
+  appointmentEnd?: Date;
+  /** Set alongside `appointmentEnd`: every slot that appointment would take. */
+  eventKeys?: string[];
   [key: string]: unknown;
 }
 
@@ -77,4 +82,7 @@ export interface UseBookingAvailabilityArgs {
   /** Called with the raw slot the user clicked, once it's confirmed still
    * open. No assumption that a multi-step wizard exists on the other end. */
   onSlotClicked: (slot: Slot) => void;
+  /** Only offer start times with this many minutes free in a row with the
+   * same professional. Omit or 0 to offer every open slot. */
+  requiredMinutes?: number;
 }

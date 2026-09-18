@@ -1,0 +1,183 @@
+{
+  "categories": [
+    {
+      "id": "pmu-brows",
+      "name": "Permanent Makeup - Brows & Marks",
+      "services": [
+        { "id": "pmu-natural", "name": "A Natural Looking Enhancement - PMU", "price": 650, "duration": 120 },
+        { "id": "microbladed-brows", "name": "Microbladed Brows", "price": 600, "duration": 165 },
+        { "id": "microblade-shade", "name": "Microblade + Shade", "price": 750, "duration": 190 },
+        { "id": "nano-brows", "name": "Nano Brows", "price": 800, "duration": 165 },
+        { "id": "freckles", "name": "Freckles", "price": 250, "duration": 60 }
+      ],
+      "subcategories": [
+        {
+          "id": "pmu-touchups",
+          "name": "Touch-Ups",
+          "services": [
+            { "id": "touchup-6wk", "name": "6 Week PMU Touch-Up", "price": 170, "duration": 100 },
+            { "id": "touchup-annual", "name": "After 6 Weeks Touch-Up (Annually)", "price": 250, "duration": 120 },
+            { "id": "touchup-foreign", "name": "Foreign PMU Touch-Up", "price": 500, "duration": 90 },
+            { "id": "touchup-foreign-partial", "name": "Foreign Partial Fill", "price": 250, "duration": 120 }
+          ]
+        },
+        {
+          "id": "beauty-marks",
+          "name": "Beauty Marks",
+          "services": [
+            { "id": "beauty-mark", "name": "Beauty Mark", "price": 60, "duration": 30 },
+            { "id": "beauty-marks-plus", "name": "Beauty Marks +", "price": 100, "duration": 40 },
+            { "id": "beauty-heart", "name": "Beauty Heart", "price": 80, "duration": 40 },
+            { "id": "angel-removal", "name": "Angel Removal", "price": 120, "duration": 50 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "brow-services",
+      "name": "Brow Services",
+      "services": [
+        { "id": "brow-lamination", "name": "Brow Lamination", "price": 145, "duration": 55 },
+        { "id": "henna-brows", "name": "Henna Brows", "price": 85, "duration": 30 },
+        { "id": "brow-tinting", "name": "Brow Tinting", "price": 75, "duration": 55 },
+        { "id": "fafd-brows", "name": "FAFD Brows", "price": 35, "duration": 45, "note": "Unclear service — confirm with Kate what this stands for" },
+        { "id": "brow-wax-lam-tint", "name": "Brow Wax + Lamination + Tint", "price": 170, "duration": 80 },
+        { "id": "brow-maintenance", "name": "Brow Maintenance", "price": 45, "duration": 45 },
+        { "id": "waxing-brow", "name": "Waxing - Brow Maintenance", "price": 45, "duration": 45 }
+      ]
+    },
+    {
+      "id": "lash-extensions",
+      "name": "Lash Extensions",
+      "subcategories": [
+        {
+          "id": "classic-lashes",
+          "name": "Classic",
+          "services": [
+            { "id": "classic-full", "name": "Classics Full Set", "price": 170, "duration": 125 },
+            { "id": "classic-fill-2wk", "name": "Up to 2 Weeks Classic Fill", "price": 85, "duration": 90 },
+            { "id": "classic-fill-3wk", "name": "Up to 3 Weeks Classic Fill", "price": 120, "duration": 90 },
+            { "id": "classic-fill-foreign", "name": "Foreign Lash Fill", "price": 145, "duration": 75 }
+          ]
+        },
+        {
+          "id": "hybrid-lashes",
+          "name": "Hybrid",
+          "services": [
+            { "id": "hybrid-full", "name": "Hybrid Full Set", "price": 200, "duration": 160 },
+            { "id": "hybrid-fill-1wk", "name": "Up to 1 Week Hybrid Fill", "price": 110, "duration": 70 },
+            { "id": "hybrid-fill-2wk", "name": "Up to 2 Weeks Hybrid Fill", "price": 125, "duration": 90 },
+            { "id": "hybrid-fill-3wk", "name": "Up to 3 Weeks Hybrid Fill", "price": 150, "duration": 120 },
+            { "id": "hybrid-fill-foreign", "name": "Foreign Hybrid Fill", "price": 155, "duration": 115 }
+          ]
+        },
+        {
+          "id": "volume-lashes",
+          "name": "Volume",
+          "services": [
+            { "id": "volume-full", "name": "Volume Full Set", "price": 300, "duration": 130 },
+            { "id": "volume-fill-2wk", "name": "Up to 2 Weeks Volume Fill", "price": 150, "duration": 100 },
+            { "id": "volume-fill-3wk", "name": "Up to 3 Weeks Volume Fill", "price": 185, "duration": 120 },
+            { "id": "volume-fill-foreign", "name": "Foreign Volume Fill", "price": 215, "duration": 120 }
+          ]
+        },
+        {
+          "id": "mega-volume-lashes",
+          "name": "Mega Volume",
+          "services": [
+            { "id": "mv-full", "name": "MV Full Set", "price": 375, "duration": 160 },
+            { "id": "mv-fill-2wk", "name": "Up to 2 Weeks Mega Volume Fill", "price": 165, "duration": 120 },
+            { "id": "mv-fill-3wk", "name": "Up to 3 Weeks Mega Volume Fill", "price": 195, "duration": 120 }
+          ]
+        },
+        {
+          "id": "specialty-lashes",
+          "name": "Specialty Sets",
+          "services": [
+            { "id": "anime-full", "name": "Anime Lashes Full Set", "price": 200, "duration": 95 },
+            { "id": "angel-full", "name": "Angel Lashes Full Set", "price": 195, "duration": 120 }
+          ]
+        },
+        {
+          "id": "lash-maintenance-removal",
+          "name": "Maintenance & Removal",
+          "services": [
+            { "id": "lash-maintenance", "name": "Lash Maintenance", "price": 20, "duration": 25 },
+            { "id": "lash-removal", "name": "Eyelash Extension Removal", "price": 45, "duration": 30 }
+          ]
+        }
+      ],
+      "addOns": [
+        { "id": "tint", "name": "Eyelash Tinting", "price": 45, "duration": 50 },
+        { "id": "color-partial", "name": "Partial Colored Lashes", "price": 15, "duration": 10, "note": "Assumed to be a colored-lash-tint add-on — confirm meaning with Kate" },
+        { "id": "color-full", "name": "Full Colored Lashes", "price": 40, "duration": 15, "note": "Assumed to be a colored-lash-tint add-on — confirm meaning with Kate" }
+      ]
+    },
+    {
+      "id": "lash-lifts",
+      "name": "Lash Lifts & Tinting",
+      "services": [
+        { "id": "keratin-lift", "name": "Keratin Eyelash Lift", "price": 145, "duration": 60 },
+        { "id": "korean-lift", "name": "Korean Lash Lift", "price": 150, "duration": 80 },
+        { "id": "inlei-lift", "name": "InLei Lash Lift +", "price": 165, "duration": 75 }
+      ]
+    },
+    {
+      "id": "smile-therapy",
+      "name": "Smile Therapy - Teeth Whitening",
+      "services": [
+        { "id": "teeth-whitening", "name": "Smile Therapy Teeth Whitening (1hr)", "price": 155, "duration": 60 },
+        { "id": "teeth-desensitizing", "name": "Teeth Desensitizing Service", "price": 30, "duration": 20 }
+      ]
+    },
+    {
+      "id": "bundles",
+      "name": "Bundles",
+      "services": [
+        { "id": "lash-lift-teeth-whitening", "name": "Lash Lift + Teeth Whitening", "price": 300, "duration": 125, "note": "Cross-category bundle — combines lash-lifts and smile-therapy" }
+      ]
+    },
+    {
+      "id": "waxing",
+      "name": "Waxing",
+      "services": [
+        { "id": "waxing-lip", "name": "Waxing - Lip", "price": 15, "duration": 30 },
+        { "id": "waxing-chin", "name": "Waxing - Chin", "price": 20, "duration": 30 }
+      ]
+    },
+    {
+      "id": "consultations",
+      "name": "Consultations",
+      "services": [
+        { "id": "brow-consult", "name": "Brow Consult (in person)", "price": 20, "duration": 30 },
+        { "id": "lash-consult", "name": "Lash Consult (in person)", "price": 20, "duration": 30 },
+        { "id": "beauty-mark-consult", "name": "Beauty Mark Consult (in person)", "price": 20, "duration": 25 },
+        { "id": "short-consult", "name": "Up to 15 Minutes", "price": 0, "duration": 15 }
+      ]
+    },
+    {
+      "id": "other-addons",
+      "name": "Other Add-Ons / Uncategorized",
+      "services": [
+        { "id": "makeup-removal", "name": "Eye Make-up Removal Service", "price": 25, "duration": 15 },
+        { "id": "colored-partial-uncat", "name": "Partial Colored", "price": 15, "duration": 10, "note": "Duplicate entry from raw export — likely the same as lash-extensions addOns.color-partial. Confirm and remove if redundant." },
+        { "id": "colored-full-uncat", "name": "Full Colored", "price": 40, "duration": 15, "note": "Duplicate entry from raw export — likely the same as lash-extensions addOns.color-full. Confirm and remove if redundant." }
+      ]
+    }
+  ],
+  "policies": {
+    "deposit_percent": 50,
+    "deposit_refundable": false,
+    "late_cancellation_fee_percent": 50,
+    "late_cancellation_window_hours": 48,
+    "no_show_fee_flat": 75,
+    "no_show_fee_default_percent": 50,
+    "raw_policy_line_items": [
+      { "name": "50% non refundable deposit", "price": 200, "duration": 15 },
+      { "name": "In house last minute cancellation", "price": 21.25, "duration": 15 },
+      { "name": "Full Set (No Show / less than 48hr Cancellation fee)", "price": 75, "duration": 15 },
+      { "name": "Full set 50% charge (cancel less than 48 hrs or no shows)", "price": 0, "duration": 15 },
+      { "name": "default 50% charge for No show", "price": 75, "duration": 15 }
+    ]
+  }
+}

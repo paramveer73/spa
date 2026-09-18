@@ -18,6 +18,14 @@ export interface OpenSlot {
     end: Date;
     durationMinutes: number;
     employeeId: string | null;
+    /**
+     * True for a slot a booking marked in place (`extra.status`) instead of
+     * removing. Not open any more, but still the studio's time — the schedule
+     * calendar shows it, the open-slot views filter it out.
+     */
+    booked: boolean;
+    /** Whatever the slot was published as, for the calendar's event label. */
+    title?: string;
 }
 
 type RawRecord = Record<string, unknown>;
@@ -28,13 +36,7 @@ const isRecord = (value: unknown): value is RawRecord =>
 function toOpenSlot(monthKey: string, pushKey: string, raw: unknown): OpenSlot | null {
     if (!isRecord(raw)) return null;
 
-    // Older data marked a booked slot in place (`extra.status`) instead of
-    // removing it. Those aren't open, and deleting one from here would lose the
-    // booking's slot, so they're left out — the same rule the booking calendar
-    // applies.
     const extra = isRecord(raw.extra) ? raw.extra : {};
-    if (extra.status) return null;
-
     const start = toDate(raw.start);
     const end = toDate(raw.end);
     if (!start || !end) return null;
@@ -52,10 +54,12 @@ function toOpenSlot(monthKey: string, pushKey: string, raw: unknown): OpenSlot |
         end,
         durationMinutes: minutesBetween(start, end),
         employeeId,
+        booked: Boolean(extra.status),
+        title: typeof raw.title === "string" ? raw.title : undefined,
     };
 }
 
-/** Every open slot in the `freeAppointments` tree, as a flat list. */
+/** Every slot in the `freeAppointments` tree — booked-in-place ones included. */
 export function normalizeFreeSlots(tree: unknown): OpenSlot[] {
     if (!isRecord(tree)) return [];
     const slots: OpenSlot[] = [];
@@ -67,6 +71,11 @@ export function normalizeFreeSlots(tree: unknown): OpenSlot[] {
         }
     }
     return slots;
+}
+
+/** Only what a client could still book. */
+export function openOnly(slots: OpenSlot[]): OpenSlot[] {
+    return slots.filter((slot) => !slot.booked);
 }
 
 /**

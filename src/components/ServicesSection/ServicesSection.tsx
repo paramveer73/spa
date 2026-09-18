@@ -1,12 +1,14 @@
 import { useRef } from "react";
+import { Link as RouterLink } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import MaskedCard from "@/components/MaskedCard";
 import { useImageAspect, useIsMobile, useMaskPositions, useStaggeredReveal } from "@/hooks";
-import { scrollToBooking } from "@/utils/scroll";
 import { BACKDROPS, brand, featuredServices, home } from "@/data";
 import { liquidGlass } from "@/theme";
+import { useFirebase } from "@/firebase";
+import { ROUTES } from "@/Routes";
 
 const CARD_COUNT = 4;
 const FOCAL = { mobile: 0.65, desktop: 0.8 };
@@ -39,6 +41,7 @@ function BookArrow() {
 export default function ServicesSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const cardsRef = useRef<(HTMLElement | null)[]>([]);
+  const firebase = useFirebase();
   const isMobile = useIsMobile();
 
   const positions = useMaskPositions(sectionRef, cardsRef, CARD_COUNT);
@@ -157,7 +160,9 @@ export default function ServicesSection() {
             {home.cta.body}
           </Typography>
           <Button
-            onClick={scrollToBooking}
+            component={RouterLink}
+            to={ROUTES.BOOK}
+            onClick={() => firebase?.logBookNowClick("services_card")}
             variant="contained"
             sx={{
               position: "absolute",
@@ -233,9 +238,9 @@ export default function ServicesSection() {
               return (
                 <Box
                   key={svc.id}
-                  component="button"
-                  type="button"
-                  onClick={scrollToBooking}
+                  component={RouterLink}
+                  to={ROUTES.BOOK}
+                  onClick={() => firebase?.logBookNowClick("service_badge", { service: svc.name })}
                   aria-label={`${CTA_LABEL} — ${svc.name}`}
                   sx={{
                     // All four cards are the same clear glass over the shared

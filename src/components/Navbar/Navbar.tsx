@@ -1,12 +1,21 @@
 import { useEffect, useRef, useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Badge from "@mui/material/Badge";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { alpha, useTheme } from "@mui/material/styles";
+import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
+import { useSelector } from "react-redux";
+import { selectCartCount } from "@/redux";
+import { useFirebase } from "@/firebase";
 import { useGsapContext, gsap } from "@/hooks";
-import { scrollToBooking, scrollToSection } from "@/utils/scroll";
+import { scrollToSection } from "@/utils/scroll";
+import { ROUTES } from "@/Routes";
 import { useColorMode } from "@/theme";
+import AccountMenu from "@/components/AccountMenu";
+import Wordmark from "@/components/Wordmark";
 import { brand, business } from "@/data";
 
 const NAV_LINKS = ["Home", "Services", "Results", "About", "Contact"];
@@ -48,11 +57,35 @@ function ModeIcon({ mode }: { mode: "light" | "dark" }) {
   );
 }
 
+/**
+ * The cart, as a link to the booking page. The badge is hidden at zero rather
+ * than showing "0" — an empty cart shouldn't look like a pending task.
+ */
+function CartButton({ count, compact = false }: { count: number; compact?: boolean }) {
+  return (
+    <IconButton
+      component={RouterLink}
+      to={ROUTES.BOOK}
+      aria-label={count === 0 ? "Booking" : `Booking — ${count} service${count === 1 ? "" : "s"} picked`}
+      sx={{
+        color: "text.primary",
+        ...(compact ? {} : { border: 1, borderColor: "divider" }),
+      }}
+    >
+      <Badge badgeContent={count} invisible={count === 0} color="primary" overlap="circular">
+        <ShoppingBagOutlinedIcon />
+      </Badge>
+    </IconButton>
+  );
+}
+
 export default function Navbar({ ready }: NavbarProps) {
+  const cartCount = useSelector(selectCartCount);
   const { mode, toggleMode } = useColorMode();
   const [open, setOpen] = useState(false);
   const barRef = useRef<HTMLElement | null>(null);
   const theme = useTheme();
+  const firebase = useFirebase();
 
   /**
    * The bar drops in and its contents stagger up once the splash clears.
@@ -124,44 +157,9 @@ export default function Navbar({ ready }: NavbarProps) {
           borderColor: "divider",
         }}
       >
-        {/* 1. Wordmark */}
-        <Box data-nav-item sx={{ gridColumn: 1, gridRow: 1, display: "flex", flexDirection: "column", lineHeight: 1 }}>
-          <Typography
-            sx={{
-              fontSize: { xs: "1.25rem", md: "1.5rem" },
-              fontWeight: 800,
-              textTransform: "uppercase",
-              letterSpacing: "-0.02em",
-              lineHeight: 1,
-            }}
-          >
-            {brand.wordmark.primary}
-          </Typography>
-          <Typography
-            sx={{
-              fontSize: { xs: "1.25rem", md: "1.5rem" },
-              fontWeight: 800,
-              textTransform: "uppercase",
-              letterSpacing: "-0.02em",
-              lineHeight: 1,
-              mt: { xs: -0.4, md: -0.55 },
-              color: "primary.main",
-            }}
-          >
-            {brand.wordmark.secondary}
-          </Typography>
-          <Typography
-            sx={{
-              fontSize: { xs: 8, md: 9 },
-              fontWeight: 600,
-              letterSpacing: "0.18em",
-              textTransform: "uppercase",
-              color: "text.secondary",
-              mt: { xs: 0.6, md: 0.8 },
-            }}
-          >
-            {brand.location}
-          </Typography>
+        {/* 1. Wordmark — the same treatment the loader opens with */}
+        <Box data-nav-item sx={{ gridColumn: 1, gridRow: 1 }}>
+          <Wordmark size="md" />
         </Box>
 
         {/* 2. Desktop actions */}
@@ -175,9 +173,14 @@ export default function Navbar({ ready }: NavbarProps) {
           >
             <ModeIcon mode={mode} />
           </IconButton>
+          <Box data-nav-item sx={{ display: "flex" }}>
+            <CartButton count={cartCount} />
+          </Box>
           <Button
             data-nav-item
-            onClick={scrollToBooking}
+            component={RouterLink}
+            to={ROUTES.BOOK}
+            onClick={() => firebase?.logBookNowClick("navbar")}
             variant="outlined"
             sx={{
               display: "inline-flex",
@@ -194,6 +197,8 @@ export default function Navbar({ ready }: NavbarProps) {
           >
             {brand.copy.bookingCta}
           </Button>
+          {/* Renders only once someone is signed in. */}
+          <AccountMenu />
         </Box>
 
         {/* 3. Mobile controls */}
@@ -201,6 +206,8 @@ export default function Navbar({ ready }: NavbarProps) {
           <IconButton onClick={toggleMode} aria-label="Toggle colour mode" sx={{ color: "text.primary" }}>
             <ModeIcon mode={mode} />
           </IconButton>
+          <CartButton count={cartCount} compact />
+          <AccountMenu />
           <Box
             component="button"
             onClick={() => setOpen((v) => !v)}
@@ -327,9 +334,13 @@ export default function Navbar({ ready }: NavbarProps) {
           >
             <Typography sx={{ fontSize: 14, fontWeight: 600, mb: 2 }}>{business.phone}</Typography>
             <Button
+              component={RouterLink}
+              to={ROUTES.BOOK}
+              // The drawer has to close itself: navigating within the SPA
+              // doesn't unmount it.
               onClick={() => {
+                firebase?.logBookNowClick("navbar_drawer");
                 setOpen(false);
-                scrollToBooking();
               }}
               fullWidth
               variant="contained"

@@ -1,10 +1,16 @@
 import { useRef } from "react";
+import { Link as RouterLink } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import { alpha } from "@mui/material/styles";
+import Wordmark from "@/components/Wordmark";
 import { useGsapContext, gsap } from "@/hooks";
 import { BOOKING_ANCHOR } from "@/utils/scroll";
+import { useFirebase } from "@/firebase";
+import { ROUTES } from "@/Routes";
 import { PORTRAITS, brand, business, fillTemplate, stylist, browMapping, home } from "@/data";
+import { BRAND } from "@/theme";
 
 const SOCIALS = [
   { label: "Instagram", href: business.social.instagram },
@@ -14,16 +20,29 @@ const SOCIALS = [
 
 export default function ContactSection() {
   const scopeRef = useRef<HTMLElement | null>(null);
+  const firebase = useFirebase();
 
+  /**
+   * fromTo, not from: a bare `from` left the first block parked at its start
+   * offset (+22%) whenever the tween was re-created — React's double-invoked
+   * effects are enough to do it — and the details panel then rode up over the
+   * booking card. Explicit end values plus clearProps mean the worst case is
+   * no animation rather than a broken layout.
+   */
   useGsapContext(scopeRef, () => {
-    gsap.from("[data-contact-reveal]", {
-      yPercent: 22,
-      autoAlpha: 0,
-      duration: 0.9,
-      stagger: 0.1,
-      ease: "power3.out",
-      scrollTrigger: { trigger: scopeRef.current, start: "top 72%" },
-    });
+    gsap.fromTo(
+      "[data-contact-reveal]",
+      { yPercent: 22, autoAlpha: 0 },
+      {
+        yPercent: 0,
+        autoAlpha: 1,
+        duration: 0.9,
+        stagger: 0.1,
+        ease: "power3.out",
+        clearProps: "transform,visibility,opacity",
+        scrollTrigger: { trigger: scopeRef.current, start: "top 72%" },
+      }
+    );
   }, []);
 
   return (
@@ -47,13 +66,26 @@ export default function ContactSection() {
           display: "flex",
           alignItems: "flex-end",
           scrollMarginTop: "88px",
+          transition: "box-shadow .45s ease, transform .45s ease",
+          "&:hover": {
+            boxShadow: `0 30px 70px ${alpha(BRAND.brownDeep, 0.32)}`,
+            transform: "translateY(-4px)",
+          },
+          "&:hover img": { transform: "scale(1.03)" },
         }}
       >
         <Box
           component="img"
           src={PORTRAITS.smile}
           alt={`${brand.name} client`}
-          sx={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+          sx={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            transition: "transform .6s cubic-bezier(0.16,1,0.3,1)",
+          }}
         />
         <Box
           sx={{
@@ -100,6 +132,9 @@ export default function ContactSection() {
             }}
           >
             <Button
+              component={RouterLink}
+              to={ROUTES.BOOK}
+              onClick={() => firebase?.logBookNowClick("contact")}
               variant="contained"
               sx={{
                 px: { xs: 3, md: 5 },
@@ -138,7 +173,14 @@ export default function ContactSection() {
         sx={{
           mt: { xs: 0.75, md: 1 },
           borderRadius: { xs: 3, md: 4 },
-          bgcolor: "background.paper",
+          // Warm wash across the panel — a flat fill made this block read as a
+          // leftover strip under the photo rather than part of the page.
+          background: (theme) =>
+            `linear-gradient(135deg, ${alpha(BRAND.sand, theme.palette.mode === "light" ? 0.95 : 0.14)} 0%, ${
+              theme.palette.background.paper
+            } 52%, ${alpha(BRAND.accentSoft, theme.palette.mode === "light" ? 0.4 : 0.16)} 100%)`,
+          border: 1,
+          borderColor: "divider",
           p: { xs: 3, md: 6 },
           display: "grid",
           gridTemplateColumns: { xs: "1fr", md: "1.4fr 1fr 1fr" },
@@ -147,9 +189,7 @@ export default function ContactSection() {
         }}
       >
         <Box>
-          <Typography sx={{ fontWeight: 800, fontSize: { xs: "1.4rem", md: "1.8rem" }, letterSpacing: "-0.02em" }}>
-            {brand.name}
-          </Typography>
+          <Wordmark size="lg" showLocation={false} />
           <Typography sx={{ mt: 1.5, color: "text.secondary", maxWidth: 360, fontSize: 14 }}>
             {fillTemplate(brand.copy.contact.blurb, {
               role: stylist.role,
@@ -166,7 +206,12 @@ export default function ContactSection() {
                 target="_blank"
                 rel="noreferrer"
                 variant="overline"
-                sx={{ color: "text.primary", textDecoration: "none", "&:hover": { color: "primary.main" } }}
+                sx={{
+                  color: "text.primary",
+                  textDecoration: "none",
+                  transition: "color .25s ease",
+                  "&:hover": { color: "primary.main", textDecoration: "underline", textUnderlineOffset: 5 },
+                }}
               >
                 {social.label}
               </Typography>
@@ -183,7 +228,15 @@ export default function ContactSection() {
             href={business.address.mapUrl}
             target="_blank"
             rel="noreferrer"
-            sx={{ display: "block", mt: 1.5, color: "text.secondary", fontSize: 14, textDecoration: "none" }}
+            sx={{
+              display: "block",
+              mt: 1.5,
+              color: "text.secondary",
+              fontSize: 14,
+              textDecoration: "none",
+              transition: "color .25s ease",
+              "&:hover": { color: "primary.main" },
+            }}
           >
             {business.address.street}, {business.address.suite}
             <br />
@@ -198,14 +251,30 @@ export default function ContactSection() {
           <Typography
             component="a"
             href={`tel:${business.phone}`}
-            sx={{ display: "block", mt: 1.5, color: "text.secondary", fontSize: 14, textDecoration: "none" }}
+            sx={{
+              display: "block",
+              mt: 1.5,
+              color: "text.secondary",
+              fontSize: 14,
+              textDecoration: "none",
+              transition: "color .25s ease",
+              "&:hover": { color: "primary.main" },
+            }}
           >
             {business.phone}
           </Typography>
           <Typography
             component="a"
             href={`mailto:${business.email}`}
-            sx={{ display: "block", mt: 0.5, color: "text.secondary", fontSize: 14, textDecoration: "none" }}
+            sx={{
+              display: "block",
+              mt: 0.5,
+              color: "text.secondary",
+              fontSize: 14,
+              textDecoration: "none",
+              transition: "color .25s ease",
+              "&:hover": { color: "primary.main" },
+            }}
           >
             {business.email}
           </Typography>
