@@ -109,6 +109,13 @@ class Firebase {
   doSignOut = () => signOut(this.auth);
 
   /**
+   * The signed-in user's ID token, for the functions API, or null when no
+   * one is signed in. Firebase refreshes it before it expires, so each call
+   * gets a valid one.
+   */
+  getIdToken = () => (this.auth.currentUser ? this.auth.currentUser.getIdToken() : Promise.resolve(null));
+
+  /**
    * A popup rather than signInWithRedirect: the redirect flow depends on
    * third-party storage for the auth domain, which Safari and Chrome now
    * partition, so on phones it returns with no user. `select_account` shows
@@ -169,6 +176,26 @@ class Firebase {
     return update(ref(this.db), updates);
   };
 
+
+  /** CATALOG API — the bookable menu (shape in src/data/catalog.ts) */
+
+  /** Live `catalog` node, raw. Returns the unsubscribe. */
+  onCatalogUpdate = (callback) => onValue(ref(this.db, "catalog"), (snapshot) => callback(snapshot.val()));
+
+  /** Writes a new service under a push key, so ids never collide with existing ones. */
+  addCatalogService = (service) => {
+    const key = push(ref(this.db, "catalog/services")).key;
+    if (!key) return Promise.reject(new Error("Could not generate a key for the new service."));
+    return update(ref(this.db), { [`catalog/services/${key}`]: service });
+  };
+
+  /**
+   * Updates only the fields given, so anything the form doesn't edit
+   * survives. A null field is removed (clearing a note, un-marking an add-on).
+   */
+  updateCatalogService = (id, fields) => update(ref(this.db, `catalog/services/${id}`), fields);
+
+  deleteCatalogService = (id) => update(ref(this.db), { [`catalog/services/${id}`]: null });
 
   // Reference helper pointing to the root-level employees node
   employeesRef = () => ref(this.db, 'employees');

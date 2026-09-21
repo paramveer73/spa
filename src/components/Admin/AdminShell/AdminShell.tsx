@@ -5,6 +5,7 @@ import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined
 import EventAvailableOutlinedIcon from "@mui/icons-material/EventAvailableOutlined";
 import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import SpaOutlinedIcon from "@mui/icons-material/SpaOutlined";
 import { brand } from "@/data/brand";
 import { ROUTES } from "@/Routes";
 
@@ -16,6 +17,7 @@ export interface AdminShellProps {
 const ADMIN_TABS = [
     { label: "Schedule", to: ROUTES.ADMIN_DASHBOARD, icon: <CalendarMonthOutlinedIcon fontSize="small" /> },
     { label: "Bookings", to: ROUTES.ADMIN_BOOKINGS, icon: <EventAvailableOutlinedIcon fontSize="small" /> },
+    { label: "Services", to: ROUTES.ADMIN_SERVICES, icon: <SpaOutlinedIcon fontSize="small" /> },
     { label: "Team", to: ROUTES.ADMIN_TEAM, icon: <GroupsOutlinedIcon fontSize="small" /> },
 ] as const;
 

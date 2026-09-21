@@ -1,23 +1,25 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import AppLoader from "@/components/AppLoader";
 import BookingFlow from "@/components/BookingFlow";
 import PageHeader from "@/components/PageHeader";
-import { SESSION_STATUS, useSignInRequired } from "@/firebase";
+import { useCatalog } from "@/hooks";
+import { ROUTES } from "@/Routes";
+import { signInPathFor } from "@/utils/nextPath";
+
+// Signing in from the menu comes straight back to it.
+const SIGN_IN_PATH = signInPathFor(ROUTES.BOOK);
 
 /**
- * Step one of booking: pick the services. The cart lives in Redux, so what's
- * chosen here survives navigating away and is what the date/time step will
- * read when it exists.
+ * Booking: pick the services, a time, then confirm. The cart lives in Redux,
+ * so what's chosen here survives navigating away.
  *
- * Booking needs an account, so a signed-out visitor goes to sign-in first
- * and comes straight back. Nothing renders until the session is known —
- * otherwise the menu would flash up before the redirect.
+ * Open to everyone, so the menu and its prices can be read before signing
+ * in. Adding to the cart needs a session — the menu itself offers sign-in
+ * where the cart would be.
  */
 export default function BookingPage() {
-  const session = useSignInRequired();
-  if (session !== SESSION_STATUS.SIGNED_IN) return <AppLoader />;
+  useCatalog();
 
   return (
     <Box component="main" sx={{ minHeight: "100dvh", bgcolor: "background.default", color: "text.primary" }}>
@@ -38,7 +40,7 @@ export default function BookingPage() {
         </Typography>
 
         {/* 2. Services → time → confirm */}
-        <BookingFlow />
+        <BookingFlow signInPath={SIGN_IN_PATH} />
       </Container>
     </Box>
   );

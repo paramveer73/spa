@@ -1,4 +1,4 @@
-import { useRef, type ReactNode } from "react";
+import { useRef } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -46,9 +46,9 @@ export default function HeroSection({ ready }: HeroSectionProps) {
   const firebase = useFirebase();
 
   const stats = [
-    { value: `${stylist.yearsExperience}+`, label: "years of precision artistry", Icon: LatticeMark },
-    { value: `${services.length}`, label: "treatments in studio", Icon: RingsMark },
-    { value: browMapping.price.display ?? "", label: "brow mapping session", Icon: DiscMark },
+    { value: `${stylist.yearsExperience}+`, label: "years of precision artistry" },
+    { value: `${services.length}`, label: "treatments in studio" },
+    { value: browMapping.price.display ?? "", label: "brow mapping session" },
   ];
 
   useGsapContext(
@@ -189,28 +189,32 @@ export default function HeroSection({ ready }: HeroSectionProps) {
               {brand.copy.hero.secondary}
             </Typography>
 
-            <Button
-              data-hero-left
-              component={RouterLink}
-              to={ROUTES.BOOK}
-              onClick={() => firebase?.logBookNowClick("hero")}
-              variant="contained"
-              sx={{
-                mt: { xs: 3, md: 4 },
-                px: 4,
-                py: 1.8,
-                borderRadius: 3,
-                fontSize: "1rem",
-                bgcolor: (theme) => alpha(BRAND.accentSoft, theme.palette.mode === "light" ? 0.45 : 0.9),
-                color: "text.primary",
-                "&:hover": {
-                  bgcolor: (theme) => alpha(BRAND.accentSoft, theme.palette.mode === "light" ? 0.7 : 1),
-                  transform: "translateY(-2px)",
-                },
-              }}
-            >
-              {brand.copy.bookingCta}
-            </Button>
+            {/* The entrance slides this wrapper, not the button: the theme gives
+                buttons a CSS transform transition, and GSAP reading a transform
+                mid-transition took -28px as the resting spot and left it there.
+                It also frees the button's own hover lift from GSAP's inline transform. */}
+            <Box data-hero-left sx={{ mt: { xs: 3, md: 4 } }}>
+              <Button
+                component={RouterLink}
+                to={ROUTES.BOOK}
+                onClick={() => firebase?.logBookNowClick("hero")}
+                variant="contained"
+                sx={{
+                  px: 4,
+                  py: 1.8,
+                  borderRadius: 3,
+                  fontSize: "1rem",
+                  bgcolor: (theme) => alpha(BRAND.accentSoft, theme.palette.mode === "light" ? 0.45 : 0.9),
+                  color: "text.primary",
+                  "&:hover": {
+                    bgcolor: (theme) => alpha(BRAND.accentSoft, theme.palette.mode === "light" ? 0.7 : 1),
+                    transform: "translateY(-2px)",
+                  },
+                }}
+              >
+                {brand.copy.bookingCta}
+              </Button>
+            </Box>
           </Box>
         </Box>
 
@@ -303,21 +307,17 @@ export default function HeroSection({ ready }: HeroSectionProps) {
             gap: { xs: 2, md: 5 },
           }}
         >
-          {stats.map(({ value, label, Icon }) => (
+          {stats.map(({ value, label }) => (
             <Box
               key={label}
               data-hero-stat
               sx={{
                 flex: { xs: 1, md: "none" },
                 display: "flex",
-                alignItems: "center",
-                gap: { xs: 1, md: 2 },
-                justifyContent: { md: "flex-end" },
+                justifyContent: { xs: "center", md: "flex-end" },
                 textAlign: { xs: "center", md: "right" },
-                flexDirection: { xs: "column", md: "row" },
               }}
             >
-              <Icon />
               <Box>
                 <Typography sx={{ fontSize: { xs: "1.5rem", md: "2.4rem" }, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1 }}>
                   {value}
@@ -331,57 +331,5 @@ export default function HeroSection({ ready }: HeroSectionProps) {
         </Box>
       </Box>
     </Box>
-  );
-}
-
-/* Wireframe marks beside each number — drawn inline so the hero pulls in no
-   icon package, and so they inherit the text colour in both palettes. */
-
-function MarkFrame({ children }: { children: ReactNode }) {
-  return (
-    <Box
-      aria-hidden
-      sx={{
-        width: { xs: 28, md: 44 },
-        height: { xs: 28, md: 44 },
-        flexShrink: 0,
-        color: "text.disabled",
-        opacity: 0.85,
-      }}
-    >
-      <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" strokeWidth="1" width="100%" height="100%">
-        {children}
-      </svg>
-    </Box>
-  );
-}
-
-function LatticeMark() {
-  return (
-    <MarkFrame>
-      <path d="M22 6 36 14v16L22 38 8 30V14L22 6Z" />
-      <path d="M22 6v32M8 14l28 16M36 14 8 30" />
-      <circle cx="22" cy="22" r="2.5" fill="currentColor" stroke="none" />
-    </MarkFrame>
-  );
-}
-
-function RingsMark() {
-  return (
-    <MarkFrame>
-      <ellipse cx="22" cy="17" rx="12" ry="7" />
-      <ellipse cx="22" cy="27" rx="12" ry="7" />
-      <ellipse cx="22" cy="22" rx="7" ry="12" />
-    </MarkFrame>
-  );
-}
-
-function DiscMark() {
-  return (
-    <MarkFrame>
-      <ellipse cx="22" cy="15" rx="13" ry="6.5" />
-      <path d="M9 15v14c0 3.6 5.8 6.5 13 6.5s13-2.9 13-6.5V15" />
-      <path d="M22 8.5v27M9 22c4 2.6 8.4 3.6 13 3.6s9-1 13-3.6" />
-    </MarkFrame>
   );
 }

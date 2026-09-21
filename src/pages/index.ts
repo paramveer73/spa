@@ -11,4 +11,5 @@ export const AppointmentsPage = lazy(() => import("./appointmentsPage"));
 export const AdminLayoutPage = lazy(() => import("./adminLayoutPage"));
 export const AdminDashboardPage = lazy(() => import("./adminDashboardPage"));
 export const AdminBookingsPage = lazy(() => import("./adminBookingsPage"));
+export const AdminServicesPage = lazy(() => import("./adminServicesPage"));
 export const AdminTeamPage = lazy(() => import("./adminTeamPage"));

@@ -1,0 +1,10 @@
+node_modules/
+
+# Secrets — never commit the real app password. .env.example documents the
+# required keys and stays tracked.
+.env
+.env.local
+.env.*.local
+*.log
+*.cache
+

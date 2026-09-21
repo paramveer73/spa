@@ -12,7 +12,11 @@
  * of free disk space (usually far more than localStorage's few MB).
  */
 
-const CACHE_NAME = "orchid11-image-cache-v1";
+import { brand } from "@/data/brand";
+
+// Named from the brand slug like every other storage key, so a site reused
+// for another business never reads this one's cache.
+const CACHE_NAME = `${brand.slug}-image-cache-v1`;
 
 // If the Firebase Storage bucket doesn't have a CORS policy allowing this
 // origin, `fetch(src, { mode: "cors" })` below fails — and the browser logs

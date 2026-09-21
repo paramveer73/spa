@@ -13,5 +13,6 @@ export const ROUTES = {
   // frame; the child paths must keep that prefix.
   ADMIN_DASHBOARD: "/admin",
   ADMIN_BOOKINGS: "/admin/bookings",
+  ADMIN_SERVICES: "/admin/services",
   ADMIN_TEAM: "/admin/team",
 } as const;

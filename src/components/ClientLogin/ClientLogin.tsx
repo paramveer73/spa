@@ -13,6 +13,8 @@ import useClientSignIn from "./useClientSignIn";
 export interface ClientLoginProps {
   /** Absolute URL the emailed link opens: the sign-in page, carrying where to go next. */
   returnUrl: string;
+  /** "h1" on the sign-in page; "h2" where it sits under another page's heading (the booking menu's side column). */
+  headingComponent?: "h1" | "h2";
 }
 
 // 52px clears the 48px touch-target minimum with room for a thumb.
@@ -48,7 +50,7 @@ function GoogleMark() {
  *
  * Two ways in, neither with a password: Google, or a one-time link by email.
  */
-export default function ClientLogin({ returnUrl }: ClientLoginProps) {
+export default function ClientLogin({ returnUrl, headingComponent = "h1" }: ClientLoginProps) {
   const { phase, error, sentTo, signInWithGoogle, sendLink, completeWithEmail, startOver } =
     useClientSignIn(returnUrl);
   const [email, setEmail] = useState("");
@@ -86,7 +88,7 @@ export default function ClientLogin({ returnUrl }: ClientLoginProps) {
       {phase === SIGN_IN_PHASE.LINK_SENT && (
         <>
           <MarkEmailReadOutlinedIcon sx={{ fontSize: 40, color: "primary.main" }} />
-          <Typography component="h1" sx={{ fontSize: { xs: 28, sm: 32 }, fontWeight: 800, mt: 1.5 }}>
+          <Typography component={headingComponent} sx={{ fontSize: { xs: 28, sm: 32 }, fontWeight: 800, mt: 1.5 }}>
             Check your inbox
           </Typography>
           <Typography sx={{ color: "text.secondary", mt: 1, mb: 3, overflowWrap: "anywhere" }}>
@@ -108,7 +110,7 @@ export default function ClientLogin({ returnUrl }: ClientLoginProps) {
       {/* 3. Choosing how to sign in */}
       {(phase === SIGN_IN_PHASE.IDLE || busy || confirming) && (
         <>
-          <Typography component="h1" sx={{ fontSize: { xs: 28, sm: 32 }, fontWeight: 800, lineHeight: 1.1 }}>
+          <Typography component={headingComponent} sx={{ fontSize: { xs: 28, sm: 32 }, fontWeight: 800, lineHeight: 1.1 }}>
             {confirming ? "Confirm your email" : "Sign in to book"}
           </Typography>
           <Typography sx={{ color: "text.secondary", mt: 1, mb: 3 }}>

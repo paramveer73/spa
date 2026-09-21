@@ -11,6 +11,7 @@ import { Calendar, useEmployees, type BookingDataSource, type Employee, type Slo
 import { FEATURE_FLAGS } from "@/constants/featureFlags";
 import { useFirebase } from "@/firebase";
 import { selectCart } from "@/redux";
+import BookingConfirmed, { type BookingSummary } from "./BookingConfirmed";
 import ConfirmStep from "./ConfirmStep";
 import {
   BOOKING_STEP,
@@ -21,15 +22,24 @@ import {
 } from "./bookingSteps";
 
 /**
- * The three steps of booking, in memory: pick services, pick a time, confirm.
+ * The three steps of booking, in memory: pick services, pick a time, confirm
+ * (card on file, retainer agreed and charged) — then the confirmation.
  *
  * Only the cart lives in Redux — it's read by the navbar badge, so it has to
  * outlive this page. Which step you're on and which slot you clicked are
  * nobody else's business, so they stay here and reset on a fresh visit.
  */
-export default function BookingFlow() {
+export interface BookingFlowProps {
+  /** The sign-in page, set to return here — for the menu's sign-in prompts. */
+  signInPath: string;
+}
+
+export default function BookingFlow({ signInPath }: BookingFlowProps) {
   const [step, setStep] = useState<BookingStep>(BOOKING_STEP.SERVICES);
   const [slot, setSlot] = useState<Slot | null>(null);
+  // Set once booked. The cart is cleared at that moment, so this is what the
+  // confirmation shows — and what keeps the flow from falling back to the menu.
+  const [booked, setBooked] = useState<BookingSummary | null>(null);
 
   const firebase = useFirebase() as BookingDataSource | null;
   // The calendar colours slots by who owns them, so the team list has to be live.
@@ -44,6 +54,17 @@ export default function BookingFlow() {
     setStep(BOOKING_STEP.CONFIRMATION);
   };
 
+  const handlePickAnotherTime = () => {
+    setSlot(null);
+    setStep(BOOKING_STEP.CALENDAR);
+  };
+
+  const handleBookAnother = () => {
+    setBooked(null);
+    setSlot(null);
+    setStep(BOOKING_STEP.SERVICES);
+  };
+
   // An empty cart means there's nothing to schedule — back to the menu.
   const activeStep = cart.length === 0 ? BOOKING_STEP.SERVICES : step;
 
@@ -51,7 +72,8 @@ export default function BookingFlow() {
     <Box>
       {/* 1. Where you are */}
       <Stepper
-        activeStep={BOOKING_STEP_ORDER.indexOf(activeStep)}
+        // Past the last step once booked, so every step shows as done.
+        activeStep={booked ? BOOKING_STEP_ORDER.length : BOOKING_STEP_ORDER.indexOf(activeStep)}
         alternativeLabel
         sx={{ mb: { xs: 3, md: 5 } }}
       >
@@ -62,8 +84,10 @@ export default function BookingFlow() {
         ))}
       </Stepper>
 
+      {booked && <BookingConfirmed summary={booked} onBookAnother={handleBookAnother} />}
+
       {/* 2. Back out of a step without losing the cart */}
-      {activeStep !== BOOKING_STEP.SERVICES && (
+      {!booked && activeStep !== BOOKING_STEP.SERVICES && (
         <Button
           onClick={() => setStep(previousStep(activeStep))}
           startIcon={<ArrowBackIcon sx={{ fontSize: 12 }} />}
@@ -74,11 +98,11 @@ export default function BookingFlow() {
       )}
 
       {/* 3. The step itself */}
-      {activeStep === BOOKING_STEP.SERVICES && (
-        <BookingMenu onContinue={() => setStep(BOOKING_STEP.CALENDAR)} />
+      {!booked && activeStep === BOOKING_STEP.SERVICES && (
+        <BookingMenu onContinue={() => setStep(BOOKING_STEP.CALENDAR)} signInPath={signInPath} />
       )}
 
-      {activeStep === BOOKING_STEP.CALENDAR && firebase && (
+      {!booked && activeStep === BOOKING_STEP.CALENDAR && firebase && (
         <Calendar
           firebase={firebase}
           employees={employees}
@@ -87,7 +111,9 @@ export default function BookingFlow() {
         />
       )}
 
-      {activeStep === BOOKING_STEP.CONFIRMATION && <ConfirmStep slot={slot} employees={employees} />}
+      {!booked && activeStep === BOOKING_STEP.CONFIRMATION && (
+        <ConfirmStep slot={slot} employees={employees} onBooked={setBooked} onPickAnotherTime={handlePickAnotherTime} />
+      )}
     </Box>
   );
 }

@@ -6,3 +6,4 @@ export { default as useStaggeredReveal } from "./useStaggeredReveal";
 export type { RevealStyle } from "./useStaggeredReveal";
 export { default as usePointerParallax } from "./usePointerParallax";
 export { default as useGsapContext, gsap, ScrollTrigger } from "./useGsapContext";
+export { default as useCatalog } from "./useCatalog";

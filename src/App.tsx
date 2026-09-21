@@ -35,6 +35,7 @@ export default function App() {
                   <Route path={ROUTES.ADMIN_DASHBOARD} element={<Pages.AdminLayoutPage />}>
                     <Route index element={<Pages.AdminDashboardPage />} />
                     <Route path={ROUTES.ADMIN_BOOKINGS} element={<Pages.AdminBookingsPage />} />
+                    <Route path={ROUTES.ADMIN_SERVICES} element={<Pages.AdminServicesPage />} />
                     <Route path={ROUTES.ADMIN_TEAM} element={<Pages.AdminTeamPage />} />
                     <Route path="*" element={<Navigate to={ROUTES.ADMIN_DASHBOARD} replace />} />
                   </Route>
